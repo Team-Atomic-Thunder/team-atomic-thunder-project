@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <Router>
+     <Router>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
