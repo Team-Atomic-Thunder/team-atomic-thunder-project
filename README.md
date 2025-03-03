@@ -1,9 +1,16 @@
 # team-atomic-thunder-project
 ## COS 420 project for Team A AKA Team Atomic Thunder
 
+### Align ~ 'Sync your tasks with your goals'
+
 ### Description: 
-At the University of Maine, students take a range of class credits from large to small. For example, a typical undergraduate student taking 4-5 courses must track 10-20 major due dates per semester. Regardless of the amount of credits a student takes, it is important for student to be able to keep track of due dates, exam dates, and/or assignments. Time management can be a large obstacle for college students in any field in addition to life outside of class. It can be easy for students to forget due dates, miss syllabus updates, and fall behind in classes. One missed or late assignment can easily compound into a much larger problem. Properly tracking assignments, important dates, and course progress can allieviate a huge amount of stress and academic anxiety. As a team, we hope to offer a way to make tracking easier and more accessible for students. Prior solutions to tracking assignments are varied, from physical paper planners, to excel spreadsheets, to the notes app in our phones which are very helpful but still lack a wide range of tools. To add on, manually transferring these dates from multiple PDF syllabi into personal calendars is time-consuming and error-prone, leading to missed deadlines and increased academic stress. However, all of these solutions require the commitment constantly updating and maintaining them as new assignments get released, due dates change, and courses progress. How can we create a centralized way for students to track important dates and course progress while incentivizing starting assignments early and turning work in on time? How can we create a tool that automatically extracts and organizes important academic dates from course syllabi into a unified calendar system, while accounting for the varying formats and structures of different professors' syllabi?
+As a team, we hope to offer a way to make tracking easier and more accessible for students. Prior solutions to tracking assignments are varied, from physical paper planners, to excel spreadsheets, to the notes app in our phones which are very helpful but still lack a wide range of tools. To add on, manually transferring these dates from multiple PDF syllabi into personal calendars is time-consuming and error-prone, leading to missed deadlines and increased academic stress. However, all of these solutions require the commitment constantly updating and maintaining them as new assignments get released, due dates change, and courses progress. 
 
+### Team: 
+Project Manager - Zo Carroll (zo.carroll@maine.edu)
+Designer - Kursten Massey (kursten.massey@maine.edu)
+Developers - Meghann Manson (meghann.manson@maine.edu), Liv Anderson (liv.anderson@maine.edu), & Siaka Diarra (siaka.diarra@maine.edu)
 
-### Team: Project Manager - Zo Carroll, Designer - Kursten Massey, Developers - Meghann Manson, Liv Anderson, Siaka Diarra.
-
+### Meeting Times:
+Mon & Fri @1815-1900
+Backup Times: Wed @1815-1900
