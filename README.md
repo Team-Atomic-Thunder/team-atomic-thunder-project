@@ -14,3 +14,13 @@ Developers - Meghann Manson (meghann.manson@maine.edu), Liv Anderson (liv.anders
 ### Meeting Times:
 Mon & Fri @1815-1900
 Backup Times: Wed @1815-1900
+
+### Required Dependencies
+
+```bash
+npm install react-router-dom
+npm install bootstrap react-bootstrap
+npm install @fullcalendar/react @fullcalendar/daygrid
+npm install pdf-parse
+npm install axios
+```
