@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-const HomePage = () => {
+function HomePage() {
   return (
     <Container className="py-5 text-center">
       <Row className="justify-content-center mb-5">
@@ -14,13 +13,8 @@ const HomePage = () => {
           </p>
           
           <div className="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
-            <Link to="/upload">
-              <Button variant="primary" size="lg">Upload Syllabus</Button>
-            </Link>
-            
-            <Link to="/dashboard">
-              <Button variant="outline-secondary" size="lg">View Dashboard</Button>
-            </Link>
+            <Button variant="primary" size="lg">Upload Syllabus</Button>
+            <Button variant="outline-secondary" size="lg">View Dashboard</Button>
           </div>
         </Col>
       </Row>
@@ -61,6 +55,6 @@ const HomePage = () => {
       </Row>
     </Container>
   );
-};
+}
 
 export default HomePage;
