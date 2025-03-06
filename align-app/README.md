@@ -8,4 +8,9 @@ npm install @fullcalendar/react @fullcalendar/daygrid
 npm install pdf-parse
 npm install axios
 ```
-3. Enter ```npm start```
+3. Run ```npm start```
+
+### App Running on Teams' Machines
+
+Link: https://docs.google.com/document/d/13Kg4ABdhLJTuJ48swX5GOtbcQP9ssZEZYW-9z344OJ8/edit?usp=sharing
+
