@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'; // You can create this file with any custom styles
-
-// Only importing HomePage
+import './App.css';
 import HomePage from './HomePage';
 
 function App() {
