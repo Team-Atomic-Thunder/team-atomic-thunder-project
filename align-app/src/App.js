@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase';
 
 // Components
 import HomePage from './HomePage';
@@ -17,13 +15,12 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-
-    // Cleanup subscription on unmount
-    return unsubscribe;
+    // Check if user is logged in
+    const user = localStorage.getItem('alignCurrentUser');
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+    setLoading(false);
   }, []);
 
   // A simple function to protect routes
@@ -37,6 +34,12 @@ function App() {
     return children;
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('alignCurrentUser');
+    setCurrentUser(null);
+    window.location.href = '/';
+  };
+
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">
@@ -47,13 +50,30 @@ function App() {
             
             <nav>
               <ul className="list-unstyled d-flex mb-0">
-                {currentUser && (
+                {currentUser ? (
                   <>
                     <li className="me-3">
                       <Link to="/dashboard" className="text-white text-decoration-none">Dashboard</Link>
                     </li>
+                    <li className="me-3">
+                      <Link to="/upload" className="text-white text-decoration-none">Upload</Link>
+                    </li>
                     <li>
-                      <Link to="/profile" className="text-white text-decoration-none">Profile</Link>
+                      <button 
+                        onClick={handleLogout}
+                        className="btn btn-link text-white text-decoration-none p-0"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="me-3">
+                      <Link to="/login" className="text-white text-decoration-none">Login</Link>
+                    </li>
+                    <li>
+                      <Link to="/signup" className="text-white text-decoration-none">Sign Up</Link>
                     </li>
                   </>
                 )}

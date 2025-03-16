@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // Assuming firebase.js is in src folder
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -67,22 +65,47 @@ function SignUp() {
     setLoading(true);
     
     try {
-      // Create user with Firebase directly
-      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      // Check if user already exists
+      const users = JSON.parse(localStorage.getItem('alignUsers') || '[]');
+      const userExists = users.some(user => user.email === formData.email);
       
-      // Note: In a real application, you might want to store additional user data
-      // (firstName, lastName) in a database like Firestore
+      if (userExists) {
+        throw new Error('email-already-in-use');
+      }
       
-      // Handle successful signup
+      // Create a new user
+      const newUser = {
+        id: Date.now().toString(),
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        // In a real app, never store passwords in plaintext
+        // This is just for demonstration
+        password: formData.password
+      };
+      
+      // Add to users array
+      users.push(newUser);
+      localStorage.setItem('alignUsers', JSON.stringify(users));
+      
+      // Set current user
+      localStorage.setItem('alignCurrentUser', JSON.stringify({
+        id: newUser.id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName
+      }));
+      
+      // Simulate delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
-      // Handle specific Firebase errors
       console.error('Signup error:', error);
       
-      if (error.code === 'auth/email-already-in-use') {
+      if (error.message === 'email-already-in-use') {
         setError('This email is already in use. Try logging in instead.');
-      } else if (error.code === 'auth/weak-password') {
-        setError('Password is too weak. Use at least 6 characters.');
       } else {
         setError('Failed to create an account. Please try again.');
       }

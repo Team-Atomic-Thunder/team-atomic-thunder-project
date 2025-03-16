@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // Assuming firebase.js is in src folder
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -36,19 +34,34 @@ function Login() {
     setLoading(true);
     
     try {
-      // Sign in with Firebase directly
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      // Simulate authentication delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Redirect to dashboard on successful login
+      // Check credentials
+      const users = JSON.parse(localStorage.getItem('alignUsers') || '[]');
+      const user = users.find(u => 
+        u.email === formData.email && u.password === formData.password
+      );
+      
+      if (!user) {
+        throw new Error('invalid-credentials');
+      }
+      
+      // Set current user in localStorage (without the password)
+      localStorage.setItem('alignCurrentUser', JSON.stringify({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+      }));
+      
+      // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       
-      // Handle specific Firebase errors
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      if (error.message === 'invalid-credentials') {
         setError('Invalid email or password. Please try again.');
-      } else if (error.code === 'auth/too-many-requests') {
-        setError('Too many unsuccessful login attempts. Please try again later.');
       } else {
         setError('Failed to log in. Please check your credentials and try again.');
       }
