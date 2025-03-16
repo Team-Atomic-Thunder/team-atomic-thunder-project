@@ -1,7 +1,10 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 
-function HomePage() {
+function HomePage({ currentUser }) {
+  const navigate = useNavigate();
+  
   return (
     <Container className="py-5 text-center">
       <Row className="justify-content-center mb-5">
@@ -13,8 +16,43 @@ function HomePage() {
           </p>
           
           <div className="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
-            <Button variant="primary" size="lg">Upload Syllabus</Button>
-            <Button variant="outline-secondary" size="lg">View Dashboard</Button>
+            {currentUser ? (
+              <>
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  onClick={() => navigate('/upload')}
+                >
+                  Upload Syllabus
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  size="lg" 
+                  onClick={() => navigate('/dashboard')}
+                >
+                  View Dashboard
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  as={Link} 
+                  to="/signup"
+                >
+                  Sign Up
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  size="lg" 
+                  as={Link} 
+                  to="/login"
+                >
+                  Log In
+                </Button>
+              </>
+            )}
           </div>
         </Col>
       </Row>
