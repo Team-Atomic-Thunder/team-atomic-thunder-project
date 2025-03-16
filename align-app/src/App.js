@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'; // You can create this file with any custom styles
+import './App.css';
 
-// Only importing HomePage
 import HomePage from './HomePage';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
         <main className="flex-grow-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* Other routes would go here in the future */}
+            <Route path="/signup" element={<SignUp />} />
             <Route path="*" element={<HomePage />} />
           </Routes>
         </main>

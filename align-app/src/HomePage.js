@@ -12,13 +12,48 @@ function HomePage() {
             Upload your syllabus, and we'll extract all important dates and deadlines automatically.
           </p>
           
-          <div className="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
-            <Button variant="primary" size="lg">Upload Syllabus</Button>
-            <Button variant="outline-secondary" size="lg">View Dashboard</Button>
+          {/* <div className="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
+            {currentUser ? (
+              <>
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  onClick={() => navigate('/upload')}
+                >
+                  Upload Syllabus
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  size="lg" 
+                  onClick={() => navigate('/dashboard')}
+                >
+                  View Dashboard
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  as={Link} 
+                  to="/signup"
+                >
+                  Sign Up
+                </Button>
+                <Button 
+                  variant="outline-secondary" 
+                  size="lg" 
+                  as={Link} 
+                  to="/login"
+                >
+                  Log In
+                </Button>
+              </>
+            )}
           </div>
         </Col>
-      </Row>
-      
+      </Row> */}
+
       <Row className="g-4">
         <Col md={4}>
           <Card className="h-100 shadow-sm">
