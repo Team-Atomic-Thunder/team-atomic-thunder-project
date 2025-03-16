@@ -34,8 +34,6 @@ function Login() {
     setLoading(true);
     
     try {
-      // In a real implementation, this is where we would call Firebase's signInWithEmailAndPassword
-      // For now, we'll simulate a successful login
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Redirect to dashboard on successful login

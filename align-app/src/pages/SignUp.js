@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase'; // Assuming firebase.js is in src folder
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -65,16 +67,25 @@ function SignUp() {
     setLoading(true);
     
     try {
-      // In a real implementation, this is where we would call Firebase's createUserWithEmailAndPassword
-      // For now, we'll simulate a successful signup
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Create user with Firebase directly
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // Note: In a real application, you might want to store additional user data
+      // (firstName, lastName) in a database like Firestore
       
       // Handle successful signup
       navigate('/dashboard');
     } catch (error) {
       // Handle specific Firebase errors
       console.error('Signup error:', error);
-      setError('Failed to create an account. Please try again.');
+      
+      if (error.code === 'auth/email-already-in-use') {
+        setError('This email is already in use. Try logging in instead.');
+      } else if (error.code === 'auth/weak-password') {
+        setError('Password is too weak. Use at least 6 characters.');
+      } else {
+        setError('Failed to create an account. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
