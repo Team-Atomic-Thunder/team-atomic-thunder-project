@@ -14,3 +14,20 @@ Developers - Meghann Manson (meghann.manson@maine.edu), Liv Anderson (liv.anders
 ### Meeting Times:
 Mon & Fri @1815-1900
 Backup Times: Wed @1815-1900
+
+### Installation and Build Process
+1. Clone Atomic Thunder GitHub repository
+2. Run required dependencies:
+```bash
+npm install react-router-dom
+npm install bootstrap react-bootstrap
+npm install @fullcalendar/react @fullcalendar/daygrid
+npm install pdf-parse
+npm install axios
+```
+3. Run ```npm start```
+
+### App Running on Teams' Machines
+
+[Click for screenshot](https://docs.google.com/document/d/13Kg4ABdhLJTuJ48swX5GOtbcQP9ssZEZYW-9z344OJ8/edit?usp=sharing
+)
