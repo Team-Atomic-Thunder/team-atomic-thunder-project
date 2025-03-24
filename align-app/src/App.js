@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-<<<<<<< HEAD
-=======
 
 // Components
->>>>>>> signup
 import HomePage from './HomePage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import DashboardPage from './pages/Dashboard';
 import SyllabusUpload from './components/syllabus/SyllabusUpload';
+import CalendarPage from './pages/Calendar';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -61,6 +59,9 @@ function App() {
                     <li className="me-3">
                       <Link to="/upload" className="text-white text-decoration-none">Upload</Link>
                     </li>
+                    <li className="me-3">
+                      <Link to="/calendar" className="text-white text-decoration-none">Calendar</Link>
+                    </li>
                     <li>
                       <button 
                         onClick={handleLogout}
@@ -102,6 +103,11 @@ function App() {
             <Route path="/upload" element={
               <RequireAuth>
                 <SyllabusUpload />
+              </RequireAuth>
+            } />
+            <Route path="/calendar" element={
+              <RequireAuth>
+                <CalendarPage />
               </RequireAuth>
             } />
             

@@ -12,13 +12,20 @@ function DashboardPage() {
   ]);
   
   const [upcomingEvents] = useState([
-    { id: 1, title: 'CS101 Assignment 2', date: '2025-03-10', type: 'Assignment', course: 'CS101', priority: 'high' },
-    { id: 2, title: 'MATH201 Quiz 3', date: '2025-03-15', type: 'Quiz', course: 'MATH201', priority: 'medium' },
-    { id: 3, title: 'PHY150 Lab Report', date: '2025-03-08', type: 'Lab', course: 'PHY150', priority: 'high' },
-    { id: 4, title: 'ENG105 Essay Draft', date: '2025-03-20', type: 'Paper', course: 'ENG105', priority: 'low' },
-    { id: 5, title: 'CS101 Midterm Exam', date: '2025-03-25', type: 'Exam', course: 'CS101', priority: 'high' },
+    { id: 1, title: 'CS101 Assignment 2', date: '2025-03-25', type: 'Assignment', course: 'CS101', priority: 'high' },
+    { id: 2, title: 'MATH201 Quiz 3', date: '2025-03-26', type: 'Quiz', course: 'MATH201', priority: 'medium' },
+    { id: 3, title: 'PHY150 Lab Report', date: '2025-03-27', type: 'Lab', course: 'PHY150', priority: 'high' },
+    { id: 4, title: 'ENG105 Essay Draft', date: '2025-03-28', type: 'Paper', course: 'ENG105', priority: 'low' },
+    { id: 5, title: 'CS101 Midterm Exam', date: '2025-03-2', type: 'Exam', course: 'CS101', priority: 'high' },
   ]);
-
+<Link
+  to={{
+    pathname: "/calendar",
+    state: { events: upcomingEvents }, // Pass upcomingEvents as state
+  }}
+>
+  <Button variant="outline-primary" size="sm">View Calendar</Button>
+</Link>
   // Sort upcoming events by date
   const sortedEvents = [...upcomingEvents].sort((a, b) => 
     new Date(a.date) - new Date(b.date)
@@ -74,7 +81,12 @@ function DashboardPage() {
           <Card className="mb-4">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Upcoming Deadlines</h5>
-              <Link to="/calendar">
+              <Link
+                to={{
+                  pathname: "/calendar", // Path to the Calendar page
+                  state: { events: upcomingEvents }, // Pass upcomingEvents as state
+                }}
+              >
                 <Button variant="outline-primary" size="sm">View Calendar</Button>
               </Link>
             </Card.Header>
