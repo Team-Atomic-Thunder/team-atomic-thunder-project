@@ -85,6 +85,7 @@ header .h4 {
   font-weight: 600;
   letter-spacing: 0.5px;
   color: white !important;
+  background-color: var(--color-primary);
 }
 
 /* Footer */
@@ -329,6 +330,10 @@ a:hover {
 
 .border-secondary {
   border-color: var(--color-secondary) !important;
+}
+
+.header_bar {
+  background-color: var(--color-primary);
 }
 
 /* Focus states */
