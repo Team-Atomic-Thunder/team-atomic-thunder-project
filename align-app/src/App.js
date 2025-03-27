@@ -45,7 +45,7 @@ function App() {
     <Router>
       <div className="d-flex flex-column min-vh-100">
         {/* Header with Navigation */}
-        <header className="bg-dark text-white p-3">
+        <header className="header">
           <div className="container d-flex justify-content-between align-items-center">
             <h1 className="h4 mb-0">Align</h1>
             

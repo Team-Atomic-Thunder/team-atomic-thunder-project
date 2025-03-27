@@ -74,10 +74,12 @@ header, .navbar, nav {
 
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.9) !important;
+  background-color: var(--color-primary) !important;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
   color: white !important;
+  background-color: var(--color-primary) !important;
 }
 
 header .h4 {
