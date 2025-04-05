@@ -1,1 +1,800 @@
-[]
+[
+  {
+    "title": "and an end date of Friday, May 2, 2025). This includes quiz dates, assignment deadlines,",
+    "start": "2025-01-13T05:00:00.000Z",
+    "allDay": true,
+    "original": "January 13, 2025",
+    "id": "event-1743824742607-7n2ccin"
+  },
+  {
+    "title": "and an end date of Friday, May 2, 2025). This includes quiz dates, assignment deadlines,",
+    "start": "2025-05-02T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 2, 2025",
+    "id": "event-1743824742607-u0x9ypn"
+  },
+  {
+    "title": "and an end date of Friday, May 2, 2025). This includes quiz dates, assignment deadlines,",
+    "start": "2025-01-13T05:00:00.000Z",
+    "allDay": true,
+    "original": "January 13",
+    "id": "event-1743824742607-5qbkce6"
+  },
+  {
+    "title": "and an end date of Friday, May 2, 2025). This includes quiz dates, assignment deadlines,",
+    "start": "2025-05-02T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 2",
+    "id": "event-1743824742607-t6sim1p"
+  },
+  {
+    "title": "Midterm Exam: Wednesday, March 5, 2025",
+    "start": "2025-03-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "March 5, 2025",
+    "id": "event-1743824742607-ifkwgaz"
+  },
+  {
+    "title": "Midterm Exam: Wednesday, March 5, 2025",
+    "start": "2025-05-05T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 5, 2025",
+    "id": "event-1743824742607-w49ka0n"
+  },
+  {
+    "title": "Midterm Exam: Wednesday, March 5, 2025",
+    "start": "2025-03-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "March 5",
+    "id": "event-1743824742607-a92aiad"
+  },
+  {
+    "title": "Midterm Exam: Wednesday, March 5, 2025",
+    "start": "2025-05-05T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 5",
+    "id": "event-1743824742607-5drocg3"
+  },
+  {
+    "title": "Final Exam: Monday, May 5, 2025 (10:30 AM – 12:30 PM)",
+    "start": "2025-03-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "March 5, 2025",
+    "id": "event-1743824742607-qzn08hr"
+  },
+  {
+    "title": "Final Exam: Monday, May 5, 2025 (10:30 AM – 12:30 PM)",
+    "start": "2025-05-05T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 5, 2025",
+    "id": "event-1743824742607-400s0wh"
+  },
+  {
+    "title": "Final Exam: Monday, May 5, 2025 (10:30 AM – 12:30 PM)",
+    "start": "2025-03-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "March 5",
+    "id": "event-1743824742607-og1tltk"
+  },
+  {
+    "title": "Final Exam: Monday, May 5, 2025 (10:30 AM – 12:30 PM)",
+    "start": "2025-05-05T04:00:00.000Z",
+    "allDay": true,
+    "original": "May 5",
+    "id": "event-1743824742607-m4rlhoq"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "22 Jan 26",
+    "id": "event-1743824742607-auitjb4"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 22",
+    "id": "event-1743824742607-n9krefy"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 26",
+    "id": "event-1743824742607-ayvnc3e"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-02-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 5",
+    "id": "event-1743824742607-mphtm38"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-02-09T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 9",
+    "id": "event-1743824742607-o45mv1e"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "22 Jan 26",
+    "id": "event-1743824742607-p6da7jz"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 22",
+    "id": "event-1743824742607-zp2csnn"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-01-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 26",
+    "id": "event-1743824742607-bp9st4e"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-02-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 5",
+    "id": "event-1743824742607-6kyko6r"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-02-09T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 9",
+    "id": "event-1743824742607-a69s8cd"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-02-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 26",
+    "id": "event-1743824742607-p1n0483"
+  },
+  {
+    "title": "Quiz 1 Cell Structure & Function Jan 22 Jan 26 (11:59 PM)",
+    "start": "2025-03-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 2",
+    "id": "event-1743824742607-igvm5z3"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "22 Jan 26",
+    "id": "event-1743824742607-c8dw7ek"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "24 Mar 28",
+    "id": "event-1743824742607-ww1nsu2"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 22",
+    "id": "event-1743824742607-3tossig"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-01-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 26",
+    "id": "event-1743824742607-a4ix6ln"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-02-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 5",
+    "id": "event-1743824742607-asbcu3x"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-02-09T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 9",
+    "id": "event-1743824742607-gushnk2"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-02-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 26",
+    "id": "event-1743824742607-3lhfp4y"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-03-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 2",
+    "id": "event-1743824742607-l73e141"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 24",
+    "id": "event-1743824742607-ztq2bci"
+  },
+  {
+    "title": "Quiz 2 Genetics & DNA Feb 5 Feb 9 (11:59 PM)",
+    "start": "2025-03-28T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 28",
+    "id": "event-1743824742607-v5lxtwc"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "22 Jan 26",
+    "id": "event-1743824742607-i9yqw60"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "24 Mar 28",
+    "id": "event-1743824742607-2vesexn"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "14 Apr 18",
+    "id": "event-1743824742607-1o8wdzz"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-01-22T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 22",
+    "id": "event-1743824742607-4me2gu1"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-01-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 26",
+    "id": "event-1743824742607-3n301q8"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-02-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 5",
+    "id": "event-1743824742607-wvqsvji"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-02-09T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 9",
+    "id": "event-1743824742607-x5q9qaq"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-02-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 26",
+    "id": "event-1743824742607-re4fztw"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-03-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 2",
+    "id": "event-1743824742607-g4e892c"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 24",
+    "id": "event-1743824742607-5czi7li"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-03-28T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 28",
+    "id": "event-1743824742607-46npogn"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 14",
+    "id": "event-1743824742607-o5obqpz"
+  },
+  {
+    "title": "Quiz 3 Evolution & Natural Selection Feb 26 Mar 2 (11:59 PM)",
+    "start": "2025-04-18T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 18",
+    "id": "event-1743824742607-ia6pxib"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "24 Mar 28",
+    "id": "event-1743824742607-gkc0cl4"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "14 Apr 18",
+    "id": "event-1743824742607-s3jm8oy"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-02-05T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 5",
+    "id": "event-1743824742607-anl038h"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-02-09T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 9",
+    "id": "event-1743824742607-h0n53x3"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-02-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 26",
+    "id": "event-1743824742607-oih6v4q"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-03-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 2",
+    "id": "event-1743824742607-plx8oe5"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 24",
+    "id": "event-1743824742607-rvjhvn6"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-03-28T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 28",
+    "id": "event-1743824742607-0bnlbqx"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 14",
+    "id": "event-1743824742607-skoenr0"
+  },
+  {
+    "title": "Quiz 4 Ecology Mar 24 Mar 28 (11:59 PM)",
+    "start": "2025-04-18T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 18",
+    "id": "event-1743824742607-2navh6n"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "24 Mar 28",
+    "id": "event-1743824742607-1glngcp"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "14 Apr 18",
+    "id": "event-1743824742607-xhonkr2"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-02-26T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 26",
+    "id": "event-1743824742607-vc1cqak"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-03-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 2",
+    "id": "event-1743824742607-ms90hxj"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-03-24T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 24",
+    "id": "event-1743824742607-n4uodex"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-03-28T04:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 28",
+    "id": "event-1743824742607-cs3s7y9"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 14",
+    "id": "event-1743824742607-46qpirz"
+  },
+  {
+    "title": "Quiz 5 Plant & Animal Systems Apr 14 Apr 18 (11:59 PM)",
+    "start": "2025-04-18T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 18",
+    "id": "event-1743824742607-oe9ny80"
+  },
+  {
+    "title": "Assignments Schedule",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "14 Apr 18",
+    "id": "event-1743824742607-dxbe16q"
+  },
+  {
+    "title": "Assignments Schedule",
+    "start": "2025-04-14T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 14",
+    "id": "event-1743824742607-13at7cc"
+  },
+  {
+    "title": "Assignments Schedule",
+    "start": "2025-04-18T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 18",
+    "id": "event-1743824742607-ph363ih"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "12 Feb 16",
+    "id": "event-1743824742607-8hnehld"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-01-29T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 29",
+    "id": "event-1743824742607-pf6ke9f"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-02-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 2",
+    "id": "event-1743824742607-mnbp0ks"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743824742607-17b8qeu"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-16T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 16",
+    "id": "event-1743824742607-3gpz1pb"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "12 Feb 16",
+    "id": "event-1743824742607-cfl2pde"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-01-29T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 29",
+    "id": "event-1743824742607-vj5c7cp"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-02-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 2",
+    "id": "event-1743824742607-vd3tbrs"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743824742607-qpxo6t3"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-02-16T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 16",
+    "id": "event-1743824742607-rsb9pq4"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-03-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 3",
+    "id": "event-1743824742607-m9pro4n"
+  },
+  {
+    "title": "Assignment 1 Microscopy Lab Report Jan 29 Feb 2 (11:59 PM)",
+    "start": "2025-03-07T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 7",
+    "id": "event-1743824742607-iegcwbs"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "12 Feb 16",
+    "id": "event-1743824742607-ti2htf5"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-01-29T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 29",
+    "id": "event-1743824742607-e94op6d"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 2",
+    "id": "event-1743824742607-0kdjit0"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743824742607-giws0hz"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-02-16T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 16",
+    "id": "event-1743824742607-yad90gf"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-03-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 3",
+    "id": "event-1743824742607-d8515m9"
+  },
+  {
+    "title": "Assignment 2 Genetic Traits Survey Feb 12 Feb 16 (11:59 PM)",
+    "start": "2025-03-07T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 7",
+    "id": "event-1743824742607-nxzoehy"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "12 Feb 16",
+    "id": "event-1743824742607-nxe6lir"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-01-29T05:00:00.000Z",
+    "allDay": true,
+    "original": "Jan 29",
+    "id": "event-1743824742607-soi1e85"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-02-02T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 2",
+    "id": "event-1743824742607-e19h5qe"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743824742607-15c95ix"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-02-16T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 16",
+    "id": "event-1743824742607-ts2umrn"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-03-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 3",
+    "id": "event-1743824742607-e17g0om"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-03-07T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 7",
+    "id": "event-1743824742607-22kequa"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "12 Feb 16",
+    "id": "event-1743824742607-3t0h62k"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-04-07T04:00:00.000Z",
+    "allDay": true,
+    "original": "7 Apr 11",
+    "id": "event-1743824742607-wk5zz82"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743824742607-olfhq15"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-02-16T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 16",
+    "id": "event-1743824742607-2zkjb6y"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-03-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 3",
+    "id": "event-1743824742607-fosx5kt"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-03-07T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 7",
+    "id": "event-1743824742607-zkizad8"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-04-07T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 7",
+    "id": "event-1743824742607-r9caip0"
+  },
+  {
+    "title": "Assignment 4 Ecosystem Poster",
+    "start": "2025-04-11T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 11",
+    "id": "event-1743824742607-gree9iz"
+  },
+  {
+    "title": "Apr 7 Apr 11 (11:59 PM)",
+    "start": "2025-04-07T04:00:00.000Z",
+    "allDay": true,
+    "original": "7 Apr 11",
+    "id": "event-1743824742607-ml4ull5"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-03-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 3",
+    "id": "event-1743824742607-qcc2w6u"
+  },
+  {
+    "title": "Assignment 3 Evolution Case Study Analysis Mar 3 Mar 7 (11:59 PM)",
+    "start": "2025-03-07T05:00:00.000Z",
+    "allDay": true,
+    "original": "Mar 7",
+    "id": "event-1743824742607-7xkk96x"
+  },
+  {
+    "title": "Apr 7 Apr 11 (11:59 PM)",
+    "start": "2025-04-07T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 7",
+    "id": "event-1743824742607-3ywotes"
+  },
+  {
+    "title": "Apr 7 Apr 11 (11:59 PM)",
+    "start": "2025-04-11T04:00:00.000Z",
+    "allDay": true,
+    "original": "Apr 11",
+    "id": "event-1743824742607-72hjepb"
+  },
+  {
+    "title": "•Quiz 1: Feb 3 - Arrays, Linked Lists, Stacks and Queues",
+    "start": "2025-02-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 3",
+    "id": "event-1743842853199-r2uaatm"
+  },
+  {
+    "title": "Quiz times will be published here and announced in class. I also try to include the topics quizzes will cover.",
+    "start": "2025-02-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 3",
+    "id": "event-1743842853199-90m38pl"
+  },
+  {
+    "title": "Quiz times will be published here and announced in class. I also try to include the topics quizzes will cover.",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743842853199-ugjnbju"
+  },
+  {
+    "title": "•Quiz 1: Feb 3 - Arrays, Linked Lists, Stacks and Queues",
+    "start": "2025-02-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 3",
+    "id": "event-1743842853199-jcy5yov"
+  },
+  {
+    "title": "•Quiz 1: Feb 3 - Arrays, Linked Lists, Stacks and Queues",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743842853199-xh8g2p7"
+  },
+  {
+    "title": "•Quiz 2: Feb 12 - BST and Splay Trees",
+    "start": "2025-02-03T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 3",
+    "id": "event-1743842853199-sglutzr"
+  },
+  {
+    "title": "•Quiz 2: Feb 12 - BST and Splay Trees",
+    "start": "2025-02-12T05:00:00.000Z",
+    "allDay": true,
+    "original": "Feb 12",
+    "id": "event-1743842853199-b9h7sfu"
+  }
+]
