@@ -1,0 +1,57 @@
+/* Calendar styles */
+.fc-daygrid-event {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.fc-event-title {
+  font-weight: bold;
+}
+
+.fc-header-toolbar {
+  margin-bottom: 1.5em !important;
+}
+
+.fc-toolbar-title {
+  font-size: 1.5em !important;
+  font-weight: 500 !important;
+}
+
+.fc-day-today {
+  background-color: rgba(159, 82, 85, 0.1) !important;
+}
+
+.fc-button-primary {
+  background-color: #9f5255 !important;
+  border-color: #9f5255 !important;
+}
+
+.fc-button-primary:hover {
+  background-color: #8a3c3f !important;
+  border-color: #8a3c3f !important;
+}
+
+.event-tooltip {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.tooltip-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.tooltip-date {
+  font-style: italic;
+  color: #666;
+} 

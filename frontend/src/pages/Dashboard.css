@@ -1,0 +1,69 @@
+/* Dashboard styles */
+
+/* Mini calendar styles */
+.dashboard-mini-event {
+  height: 5px !important;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+
+/* Make the mini calendar more compact */
+.fc-daygrid-day {
+  height: 20px !important;
+}
+
+.fc-daygrid-day-number {
+  font-size: 0.75rem;
+  padding: 2px 5px !important;
+}
+
+.fc-col-header-cell-cushion {
+  font-size: 0.75rem;
+  padding: 2px !important;
+}
+
+/* Hide time text on mini calendar */
+.fc-event-time {
+  display: none;
+}
+
+/* Hide title text on mini calendar */
+.fc-event-title {
+  display: none;
+}
+
+/* Badge styles */
+.badge {
+  font-weight: 500;
+}
+
+/* Card styles */
+.card {
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 0.75rem 1.25rem;
+}
+
+/* Custom progress bar height */
+.progress {
+  height: 8px;
+  margin-top: 5px;
+}
+
+/* Badge sizing */
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+}
+
+/* Today highlight in mini calendar */
+.fc-day-today {
+  background-color: rgba(13, 110, 253, 0.1) !important;
+} 

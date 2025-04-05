@@ -1,33 +1,30 @@
-# team-atomic-thunder-project
-## COS 420 project for Team A AKA Team Atomic Thunder
+# Team Atomic Thunder Project
+## COS 420 Project - Align: Sync your tasks with your goals
 
-### Align ~ 'Sync your tasks with your goals'
+### Commands to Run the Project
 
-### Description: 
-As a team, we hope to offer a way to make tracking easier and more accessible for students. Prior solutions to tracking assignments are varied, from physical paper planners, to excel spreadsheets, to the notes app in our phones which are very helpful but still lack a wide range of tools. To add on, manually transferring these dates from multiple PDF syllabi into personal calendars is time-consuming and error-prone, leading to missed deadlines and increased academic stress. However, all of these solutions require the commitment constantly updating and maintaining them as new assignments get released, due dates change, and courses progress. 
+All commands should be run from the root directory of the project (align-app)
 
-### Team: 
-Project Manager - Zo Carroll (zo.carroll@maine.edu) <br />
-Designer - Kursten Massey (kursten.massey@maine.edu) <br />
-Developers - Meghann Manson (meghann.manson@maine.edu), Liv Anderson (liv.anderson@maine.edu), & Siaka Diarra (siaka.diarra@maine.edu) <br />
-
-### Meeting Times:
-Mon & Fri @1815-1900
-Backup Times: Wed @1815-1900
-
-### Installation and Build Process
-1. Clone Atomic Thunder GitHub repository
-2. Run required dependencies:
+1. Install all dependencies (run this first):
 ```bash
-npm install react-router-dom
-npm install bootstrap react-bootstrap
-npm install @fullcalendar/react @fullcalendar/daygrid
-npm install pdf-parse
-npm install axios
+npm run install:all
 ```
-3. Run ```npm start```
 
-### App Running on Teams' Machines
+2. Start both frontend and backend:
+```bash
+npm start
+```
 
-[Click for screenshot](https://docs.google.com/document/d/13Kg4ABdhLJTuJ48swX5GOtbcQP9ssZEZYW-9z344OJ8/edit?usp=sharing
-)
+This will run:
+- Frontend on http://localhost:3003
+- Backend on http://localhost:3002
+
+To run only frontend:
+```bash
+npm run start:frontend
+```
+
+To run only backend:
+```bash
+npm run start:backend
+```
