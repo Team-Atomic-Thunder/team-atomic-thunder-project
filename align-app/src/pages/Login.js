@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from './../firebase-config';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -10,6 +12,9 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
+  // init firebase auth
+  const auth = getAuth(app);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,10 +27,10 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Reset error
+    // reset error
     setError('');
     
-    // Basic validation
+    // validation
     if (!formData.email || !formData.password) {
       setError('Email and password are required');
       return;
@@ -34,36 +39,34 @@ function Login() {
     setLoading(true);
     
     try {
-      // Simulate authentication delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Check credentials
-      const users = JSON.parse(localStorage.getItem('alignUsers') || '[]');
-      const user = users.find(u => 
-        u.email === formData.email && u.password === formData.password
+      // sign in with Firebase auth
+      await signInWithEmailAndPassword(
+        auth, 
+        formData.email, 
+        formData.password
       );
       
-      if (!user) {
-        throw new Error('invalid-credentials');
-      }
-      
-      // Set current user in localStorage (without the password)
-      localStorage.setItem('alignCurrentUser', JSON.stringify({
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName
-      }));
-      
-      // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       
-      if (error.message === 'invalid-credentials') {
-        setError('Invalid email or password. Please try again.');
-      } else {
-        setError('Failed to log in. Please check your credentials and try again.');
+      // error handling
+      switch (error.code) {
+        case 'auth/invalid-email':
+          setError('Invalid email format.');
+          break;
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          setError('Invalid email or password. Please try again.');
+          break;
+        case 'auth/too-many-requests':
+          setError('Too many unsuccessful login attempts. Please try again later or reset your password.');
+          break;
+        case 'auth/user-disabled':
+          setError('This account has been disabled. Please contact support.');
+          break;
+        default:
+          setError('Failed to log in. Please check your credentials and try again.');
       }
     } finally {
       setLoading(false);

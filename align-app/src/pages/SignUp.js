@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { app } from './../firebase-config';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -13,6 +16,10 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
+  // init Firebase auth and firestore
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,30 +30,30 @@ function SignUp() {
   };
 
   const validateForm = () => {
-    // Reset error
+    // reset error
     setError('');
 
-    // Check for empty fields
+    // verify fields are filled out
     const { email, password, confirmPassword, firstName, lastName } = formData;
     if (!email || !password || !confirmPassword || !firstName || !lastName) {
       setError('All fields are required');
       return false;
     }
 
-    // Validate email format
+    // validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address');
       return false;
     }
 
-    // Check password length
+    // validate password length
     if (password.length < 6) {
       setError('Password must be at least 6 characters long');
       return false;
     }
 
-    // Check if passwords match
+    // verify passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return false;
@@ -65,49 +72,45 @@ function SignUp() {
     setLoading(true);
     
     try {
-      // Check if user already exists
-      const users = JSON.parse(localStorage.getItem('alignUsers') || '[]');
-      const userExists = users.some(user => user.email === formData.email);
+      // create user with Firebase auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth, 
+        formData.email, 
+        formData.password
+      );
       
-      if (userExists) {
-        throw new Error('email-already-in-use');
-      }
+      const user = userCredential.user;
       
-      // Create a new user
-      const newUser = {
-        id: Date.now().toString(),
-        email: formData.email,
+      // update user profile with display name
+      await updateProfile(user, {
+        displayName: `${formData.firstName} ${formData.lastName}`
+      });
+      
+      // store user data in firestore
+      await setDoc(doc(db, "users", user.uid), {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        // In a real app, never store passwords in plaintext
-        // This is just for demonstration
-        password: formData.password
-      };
+        email: formData.email,
+        createdAt: new Date().toISOString()
+      });
       
-      // Add to users array
-      users.push(newUser);
-      localStorage.setItem('alignUsers', JSON.stringify(users));
-      
-      // Set current user
-      localStorage.setItem('alignCurrentUser', JSON.stringify({
-        id: newUser.id,
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName
-      }));
-      
-      // Simulate delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup error:', error);
       
-      if (error.message === 'email-already-in-use') {
-        setError('This email is already in use. Try logging in instead.');
-      } else {
-        setError('Failed to create an account. Please try again.');
+      // error handling common firebase errors
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setError('This email is already in use. Try logging in instead.');
+          break;
+        case 'auth/invalid-email':
+          setError('Invalid email format.');
+          break;
+        case 'auth/weak-password':
+          setError('Password is too weak. Please use a stronger password.');
+          break;
+        default:
+          setError('Failed to create an account. Please try again.');
       }
     } finally {
       setLoading(false);
