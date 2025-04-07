@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import AddToDBButton from './components/AddToDBButton.js';
+
 // Components
 import HomePage from './HomePage';
 import SignUp from './pages/SignUp';
@@ -114,6 +116,9 @@ function App() {
             {/* Fallback Route */}
             <Route path="*" element={<HomePage currentUser={currentUser} />} />
           </Routes>
+          <AddToDBButton />
+
+          
         </main>
 
         {/* Simple Footer */}
