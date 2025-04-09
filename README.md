@@ -17,7 +17,9 @@ As a team, we hope to offer a way to make tracking easier and more accessible fo
 
 All commands should be run from the root directory of the project (team-atomic-thunder-project)
 
-1. Install all dependencies (run this first):
+1. Make sure to be in "team atomic thunder project" directory, no need to be in src to run code.
+
+Install all dependencies (run this first):
 ```bash
 npm run install:all
 ```
