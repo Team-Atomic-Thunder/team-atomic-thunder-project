@@ -1,30 +1,24 @@
 {
   "name": "align-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Task management application",
+  "main": "index.js",
   "private": true,
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.8.4",
+    "axios": "^1.6.2",
     "bootstrap": "^5.3.3",
-    "firebase": "^11.6.0",
-    "pdf-parse": "^1.1.1",
-    "react": "^19.0.0",
+    "react": "^18.2.0",
     "react-bootstrap": "^2.10.9",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
-    "util": "^0.12.5",
-    "web-streams-polyfill": "^4.1.0",
     "web-vitals": "^2.1.4"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3"
   },
   "scripts": {
     "start": "cross-env PORT=3003 react-scripts start",
@@ -49,5 +43,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "@babel/plugin-transform-numeric-separator": "^7.23.4",
+    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@babel/plugin-transform-private-methods": "^7.23.3",
+    "@babel/plugin-transform-private-property-in-object": "^7.23.4",
+    "cross-env": "^7.0.3"
   }
 }
