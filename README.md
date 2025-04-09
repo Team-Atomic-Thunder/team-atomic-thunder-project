@@ -29,7 +29,7 @@ npm install --save-dev cross-env
 cd ..
 ```
 
-3. Start both frontend and backend:
+3. Start both frontend and backend in the team atomic thunder project directory:
 ```bash
 npm start
 ```
