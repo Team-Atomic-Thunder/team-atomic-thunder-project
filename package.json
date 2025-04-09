@@ -1,0 +1,14 @@
+{
+  "name": "team-atomic-thunder-project",
+  "version": "1.0.0",
+  "description": "Full-stack application with React frontend and Node.js backend",
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
