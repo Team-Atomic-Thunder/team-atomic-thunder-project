@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
-    "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
     "concurrently": "^8.2.2",
     "pdf-parse": "^1.1.1",
     "react-bootstrap": "^2.10.9",
     "react-router-dom": "^7.3.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
