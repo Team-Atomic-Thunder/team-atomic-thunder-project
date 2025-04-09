@@ -17,14 +17,19 @@ As a team, we hope to offer a way to make tracking easier and more accessible fo
 
 All commands should be run from the root directory of the project (team-atomic-thunder-project)
 
-1. Make sure to be in "team atomic thunder project" directory, no need to be in src to run code.
-
-Install all dependencies (run this first):
+1. Install all dependencies (run this first):
 ```bash
 npm run install:all
 ```
 
-2. Start both frontend and backend:
+2. For Windows users, install cross-env in the frontend directory:
+```bash
+cd frontend
+npm install --save-dev cross-env
+cd ..
+```
+
+3. Start both frontend and backend:
 ```bash
 npm start
 ```
@@ -42,6 +47,8 @@ To run only backend:
 ```bash
 npm run start:backend
 ```
+
+Note: The application requires PostgreSQL to be running on port 5432 for full functionality. The backend will start without the database, but database-dependent features will not work.
 
 ### App Running on Teams' Machines
 
