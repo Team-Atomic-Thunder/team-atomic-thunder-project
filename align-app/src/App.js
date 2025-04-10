@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from './firebase-config';
 
 // Components
 import HomePage from './HomePage';
@@ -14,17 +16,20 @@ import CalendarPage from './pages/Calendar';
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const auth = getAuth(app);
 
   useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem('alignCurrentUser');
-    if (user) {
-      setCurrentUser(JSON.parse(user));
-    }
-    setLoading(false);
-  }, []);
+    // listen for auth state changes using Firebase mechanism
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
 
-  // A simple function to protect routes
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [auth]);
+
+  // protect routes
   const RequireAuth = ({ children }) => {
     if (loading) return <div>Loading...</div>;
     
@@ -35,10 +40,13 @@ function App() {
     return children;
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('alignCurrentUser');
-    setCurrentUser(null);
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      // onAuthStateChanged will handle updating the state
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
   };
 
   return (
