@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Container, Form, Row, Col, Button, Card, Alert } from 'react-bootstrap';
-import './SyllabusUpload.css';
+import '../../App.css';
 
 // Main component for uploading and processing syllabi
 const SyllabusUpload = () => {
