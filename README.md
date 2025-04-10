@@ -22,7 +22,7 @@ Backup Times: Wed @1815-1900
 npm install react-router-dom
 npm install bootstrap react-bootstrap
 npm install @fullcalendar/react @fullcalendar/daygrid
-npm install pdf-parse
+npm install pdfjs-dist
 npm install axios
 ```
 3. Navigate to team-atomic-thunder-project\align-app\src <br />
