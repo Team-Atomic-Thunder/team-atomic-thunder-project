@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { Container, Form, Row, Col, Button, Card, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Alert } from 'react-bootstrap';
 import '../../App.css';
 
 // Main component for uploading and processing syllabi
 const SyllabusUpload = () => {
   // State management
   const [file, setFile] = useState(null); // the actual file
-  const [uploadProgress, setUploadProgress] = useState(0); // not used yet but could be for progress bar
+  // Removed unused state: uploadProgress and setUploadProgress
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isDragging, setIsDragging] = useState(false); // drag and drop visual feedback
