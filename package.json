@@ -1,4 +1,14 @@
 {
+  "name": "team-atomic-thunder-project",
+  "version": "1.0.0",
+  "description": "Full-stack application with React frontend and Node.js backend",
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "setup": "npm run install:all"
+  },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
@@ -8,5 +18,9 @@
     "pdf-parse": "^1.1.1",
     "react-bootstrap": "^2.10.9",
     "react-router-dom": "^7.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3"
   }
 }
