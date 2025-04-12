@@ -19,7 +19,7 @@ Backup Times: Wed @1815-1900
 1. Clone Atomic Thunder GitHub repository
 2. Run required dependencies:
 ```bash
-npm setup
+npm run setup
 ```
 3. Navigate to team-atomic-thunder-project\align-app\src <br />
 Run ```npm start```
