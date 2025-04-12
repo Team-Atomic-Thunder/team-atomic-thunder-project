@@ -7,8 +7,10 @@ import '@testing-library/jest-dom';
 const { TextEncoder, TextDecoder } = require('util');
 const { ReadableStream } = require('web-streams-polyfill');
 
+// Using global instead of globalThis to avoid ESLint errors
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-globalThis.ReadableStream = ReadableStream;
+global.ReadableStream = ReadableStream;
 
-globalThis.setImmediate = global.setImmediate || ((fn:any) => setTimeout(fn, 0));
+// Using global.setImmediate instead of globalThis.setImmediate
+global.setImmediate = global.setImmediate || ((fn) => setTimeout(fn, 0));
