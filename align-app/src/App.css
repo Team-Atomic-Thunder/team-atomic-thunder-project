@@ -356,3 +356,33 @@ a:hover {
     font-size: 1.75rem;
   }
 }
+
+/* Syllabus Upload Styles */
+
+/* Drag and drop file input container */
+.file-input-container {
+  border: 2px dashed var(--color-primary);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  background-color: rgba(159, 82, 85, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-input-container:hover {
+  background-color: rgba(159, 82, 85, 0.1);
+}
+
+.file-input-container.dragging {
+  background-color: rgba(159, 82, 85, 0.15);
+  border-color: var(--color-primary-dark);
+}
+
+/* File info display */
+.file-info {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border-left: 4px solid var(--color-primary);
+}
