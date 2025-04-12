@@ -19,11 +19,7 @@ Backup Times: Wed @1815-1900
 1. Clone Atomic Thunder GitHub repository
 2. Run required dependencies:
 ```bash
-npm install react-router-dom
-npm install bootstrap react-bootstrap
-npm install @fullcalendar/react @fullcalendar/daygrid
-npm install pdfjs-dist
-npm install axios
+npm setup
 ```
 3. Navigate to team-atomic-thunder-project\align-app\src <br />
 Run ```npm start```
