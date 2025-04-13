@@ -1,50 +1,22 @@
 {
-  "name": "align-app",
-  "version": "0.1.0",
-  "private": true,
+  "name": "team-atomic-thunder-project",
+  "version": "1.0.0",
+  "description": "Full-stack application with React frontend and Node.js backend",
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
-    "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.8.4",
+    "@fullcalendar/interaction": "^6.1.15",
+    "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
-    "firebase": "^11.6.0",
+    "concurrently": "^8.2.2",
     "pdf-parse": "^1.1.1",
-    "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.1",
-    "react-scripts": "5.0.1",
-    "util": "^0.12.5",
-    "web-streams-polyfill": "^4.1.0",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "react-router-dom": "^7.3.0"
   }
 }
