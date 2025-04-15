@@ -13,7 +13,7 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   
-  // init firebase auth
+  // Initialize Firebase auth
   const auth = getAuth(app);
 
   const handleChange = (e) => {
@@ -27,10 +27,10 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // reset error
+    // Reset error
     setError('');
     
-    // validation
+    // Validation
     if (!formData.email || !formData.password) {
       setError('Email and password are required');
       return;
@@ -39,18 +39,20 @@ function Login() {
     setLoading(true);
     
     try {
-      // sign in with Firebase auth
+      // Sign in with Firebase auth
       await signInWithEmailAndPassword(
         auth, 
         formData.email, 
         formData.password
       );
       
+      console.log("Login successful, navigating to dashboard");
+      // The onAuthStateChanged listener in App.js will detect the authentication
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       
-      // error handling
+      // Error handling
       switch (error.code) {
         case 'auth/invalid-email':
           setError('Invalid email format.');

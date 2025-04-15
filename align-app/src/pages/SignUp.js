@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { app } from './../firebase-config';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { app } from './../firebase-config';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -17,9 +17,12 @@ function SignUp() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   
-  // init Firebase auth and firestore
+  // Initialize Firebase auth and firestore
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  console.log("Firebase auth initialized:", !!auth);
+  console.log("Firestore initialized:", !!db);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,42 +67,61 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
     
     if (!validateForm()) {
+      console.log("Form validation failed");
       return;
     }
     
+    console.log("Form validation passed");
     setLoading(true);
     
     try {
-      // create user with Firebase auth
+      // Create user with Firebase auth
+      console.log("Attempting to create user with Firebase auth...");
       const userCredential = await createUserWithEmailAndPassword(
         auth, 
         formData.email, 
         formData.password
       );
       
+      console.log("User created successfully:", userCredential);
       const user = userCredential.user;
       
-      // update user profile with display name
+      // Update user profile with display name
+      console.log("Updating user profile...");
       await updateProfile(user, {
         displayName: `${formData.firstName} ${formData.lastName}`
       });
+      console.log("User profile updated successfully");
       
-      // store user data in firestore
+      // Store user data in firestore
+      console.log("Storing user data in Firestore...");
       await setDoc(doc(db, "users", user.uid), {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         createdAt: new Date().toISOString()
       });
-
-      navigate('/dashboard', { replace: true });
-
+      console.log("User data stored in Firestore successfully");
+      
+      console.log("Signup successful, navigating to dashboard");
+      
+      // Force a redirect
+      console.log("Attempting navigation to /dashboard");
+      navigate('/dashboard');
+      
+      // If direct navigation doesn't work, try with a delay and replace history
+      setTimeout(() => {
+        console.log("Attempting delayed navigation with replace");
+        navigate('/dashboard', { replace: true });
+      }, 1000);
+      
     } catch (error) {
       console.error('Signup error:', error);
       
-      // error handling common firebase errors
+      // Error handling common Firebase errors
       switch (error.code) {
         case 'auth/email-already-in-use':
           setError('This email is already in use. Try logging in instead.');
@@ -111,12 +133,15 @@ function SignUp() {
           setError('Password is too weak. Please use a stronger password.');
           break;
         default:
-          setError('Failed to create an account. Please try again.');
+          setError(`Failed to create an account: ${error.message}`);
       }
     } finally {
       setLoading(false);
     }
   };
+
+  // Debug navigation object
+  console.log("Navigate function available:", !!navigate);
 
   return (
     <Container className="py-5">
