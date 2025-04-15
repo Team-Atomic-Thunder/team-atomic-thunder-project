@@ -93,8 +93,9 @@ function SignUp() {
         email: formData.email,
         createdAt: new Date().toISOString()
       });
-      
-      navigate('/dashboard');
+
+      navigate('/dashboard', { replace: true });
+
     } catch (error) {
       console.error('Signup error:', error);
       
