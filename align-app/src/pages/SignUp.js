@@ -26,12 +26,12 @@ function SignUp() {
   console.log("Firebase auth initialized:", !!auth);
   console.log("Firestore initialized:", !!db);
 
+  // navigate to dashboard if signup is successful
   useEffect(() => {
     if (signupSuccess) {
       navigate('/dashboard');
     }
   }, [signupSuccess, navigate]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +42,6 @@ function SignUp() {
   };
 
   const validateForm = () => {
-    // reset error
     setError('');
 
     // verify fields are filled out
@@ -118,13 +117,7 @@ function SignUp() {
 
       // debug logs
       console.log("User data stored in Firestore successfully");
-      
-      console.log("Signup successful, navigating to dashboard");
-      
-      // Force a redirect
-      console.log("Attempting navigation to /dashboard");
-     
-      
+  
     } catch (error) {
       console.error('Signup error:', error);
       
