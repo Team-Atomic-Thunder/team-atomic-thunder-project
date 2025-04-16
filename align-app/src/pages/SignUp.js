@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -15,7 +15,9 @@ function SignUp() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
+
   
   // Initialize Firebase auth and firestore
   const auth = getAuth(app);
@@ -23,6 +25,13 @@ function SignUp() {
 
   console.log("Firebase auth initialized:", !!auth);
   console.log("Firestore initialized:", !!db);
+
+  useEffect(() => {
+    if (signupSuccess) {
+      navigate('/dashboard');
+    }
+  }, [signupSuccess, navigate]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +97,8 @@ function SignUp() {
       
       console.log("User created successfully:", userCredential);
       const user = userCredential.user;
+
+      setSignupSuccess(true);
       
       // Update user profile with display name
       console.log("Updating user profile...");
@@ -96,27 +107,23 @@ function SignUp() {
       });
       console.log("User profile updated successfully");
       
-      // Store user data in firestore
-      console.log("Storing user data in Firestore...");
-      await setDoc(doc(db, "users", user.uid), {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        createdAt: new Date().toISOString()
-      });
+        // Store user data in firestore
+        console.log("Storing user data in Firestore...");
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          createdAt: new Date().toISOString()
+        });
+
+      // debug logs
       console.log("User data stored in Firestore successfully");
       
       console.log("Signup successful, navigating to dashboard");
       
       // Force a redirect
       console.log("Attempting navigation to /dashboard");
-      navigate('/dashboard');
-      
-      // If direct navigation doesn't work, try with a delay and replace history
-      setTimeout(() => {
-        console.log("Attempting delayed navigation with replace");
-        navigate('/dashboard', { replace: true });
-      }, 1000);
+     
       
     } catch (error) {
       console.error('Signup error:', error);
@@ -140,8 +147,6 @@ function SignUp() {
     }
   };
 
-  // Debug navigation object
-  console.log("Navigate function available:", !!navigate);
 
   return (
     <Container className="py-5">
