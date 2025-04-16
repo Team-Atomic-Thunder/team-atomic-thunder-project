@@ -68,41 +68,46 @@ function SyllabusUpload({ onUploadSuccess }) {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
+      // Get the token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
       console.log('Uploading file:', selectedFile.name);
       const uploadResponse = await axios.post('http://localhost:3002/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
       console.log('Upload response:', uploadResponse.data);
-      const { filename, uploadId } = uploadResponse.data;
 
-      // Start parsing the uploaded file
-      console.log('Starting parse for file:', filename);
-      const parseResponse = await axios.post('http://localhost:3002/api/parse-syllabus', 
-        { filename },
-        {
-          headers: {
-            'Authorization': `Bearer ${currentUser.token}`
-          }
-        }
-      );
+      if (!uploadResponse.data || !uploadResponse.data.upload) {
+        throw new Error('Invalid response from server');
+      }
 
-      console.log('Parse response:', parseResponse.data);
-      setSuccessMessage('File uploaded and parsed successfully!');
-      setSelectedFile(null);
+      const { upload } = uploadResponse.data;
+      console.log('Upload data:', upload);
+      setUploadedFileId(upload.id);
+      setSuccessMessage('File uploaded successfully! Click "Extract Dates" to process the syllabus.');
       onUploadSuccess?.();
     } catch (error) {
       console.error('Upload error:', error);
-      setError(error.response?.data?.error || 'Error uploading file');
+      if (error.response?.status === 401) {
+        setError('Your session has expired. Please log in again.');
+      } else if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message || 'Error uploading file');
+      }
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleExtract = async () => {
+  const handleExtractDates = async () => {
     if (!uploadedFileId) {
       setError('No file uploaded to extract from');
       return;
@@ -110,7 +115,6 @@ function SyllabusUpload({ onUploadSuccess }) {
 
     setExtracting(true);
     setError('');
-    setSuccessMessage('');
 
     try {
       const token = localStorage.getItem('token');
@@ -118,40 +122,23 @@ function SyllabusUpload({ onUploadSuccess }) {
         throw new Error('No authentication token found');
       }
 
-      // Extract dates from the uploaded file
-      console.log('Attempting to extract dates with identifier:', uploadedFileId);
-      const extractResponse = await axios.post('http://localhost:3002/api/parse-syllabus', {
-        filename: uploadedFileId,
-        userId: currentUser.id,
-        originalFilename: selectedFile.name // Add original filename to help with lookup
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post('http://localhost:3002/api/parse-syllabus', 
+        { uploadId: uploadedFileId },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         }
-      });
+      );
 
-      console.log('Extract response:', extractResponse.data);
-
-      if (extractResponse.data && extractResponse.data.success) {
-        setSuccessMessage('Dates extracted successfully! They have been added to your calendar.');
-        setSelectedFile(null);
-        setUploadedFileId(null);
-      } else {
-        throw new Error('Failed to extract dates: ' + (extractResponse.data?.error || 'Unknown error'));
-      }
-
-    } catch (err) {
-      console.error('Extract error:', err);
-      if (err.response) {
-        console.error('Server error response:', err.response.data);
-        if (err.response.data.error === 'Upload not found') {
-          setError('The server could not find the uploaded file. This might be due to a server issue. Please try uploading again or contact support.');
-        } else {
-          setError(`Extraction failed: ${err.response.data.error || 'Server error occurred'}`);
-        }
-      } else {
-        setError(`Extraction failed: ${err.message || 'An unexpected error occurred'}`);
-      }
+      console.log('Parse response:', response.data);
+      setSuccessMessage('Dates extracted successfully! Check your calendar.');
+      setSelectedFile(null);
+      setUploadedFileId(null);
+      onUploadSuccess?.();
+    } catch (error) {
+      console.error('Error extracting dates:', error);
+      setError(error.response?.data?.error || 'Failed to extract dates');
     } finally {
       setExtracting(false);
     }
@@ -219,7 +206,7 @@ function SyllabusUpload({ onUploadSuccess }) {
         {uploadedFileId && (
           <button 
             className="extract-button"
-            onClick={handleExtract}
+            onClick={handleExtractDates}
             disabled={extracting}
           >
             {extracting ? 'Extracting...' : 'Extract Dates'}

@@ -68,13 +68,42 @@
   background-color: rgba(13, 110, 253, 0.1) !important;
 }
 
+.dashboard-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.logout-button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #0b5ed7;
+}
+
+.logout-button:active {
+  background-color: #0a58ca;
 }
 
 .welcome-message {
@@ -82,19 +111,4 @@
   color: #000;
   margin: 0;
   margin-bottom: 1rem;
-}
-
-.logout-button {
-  background: none;
-  border: 1px solid #dc3545;
-  color: #dc3545;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.logout-button:hover {
-  background-color: #dc3545;
-  color: white;
 } 

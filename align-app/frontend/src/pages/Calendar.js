@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Container, Row, Col, Card, ListGroup, Badge, Spinner, Alert, Button, Modal, Toast } from 'react-bootstrap';
+import axios from 'axios';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -24,14 +25,20 @@ function CalendarPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3002/api/calendar-events');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch calendar events');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
       }
+
+      console.log('Fetching calendar events...');
+      const response = await axios.get('http://localhost:3002/api/calendar-events', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
-      const data = await response.json();
-      setEvents(data);
+      console.log('Received events from server:', response.data);
+      setEvents(response.data);
       setError(null);
     } catch (err) {
       console.error('Error fetching calendar events:', err);
@@ -51,19 +58,16 @@ function CalendarPage() {
     
     try {
       setDeleting(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
       
-      const response = await fetch(`http://localhost:3002/api/calendar-events/${selectedEvent.id}`, {
-        method: 'DELETE',
+      await axios.delete(`http://localhost:3002/api/calendar-events/${selectedEvent.id}`, {
         headers: {
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
-      
-      const responseData = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(responseData.error || 'Failed to delete event');
-      }
       
       // Show success message
       setToastMessage(`Event "${selectedEvent.title.substring(0, 30)}${selectedEvent.title.length > 30 ? '...' : ''}" was deleted successfully`);
@@ -75,7 +79,7 @@ function CalendarPage() {
       setSelectedEvent(null);
     } catch (err) {
       console.error('Error deleting event:', err);
-      setError(`Failed to delete event: ${err.message}`);
+      setError(`Failed to delete event: ${err.response?.data?.error || err.message}`);
     } finally {
       setDeleting(false);
     }
@@ -85,18 +89,16 @@ function CalendarPage() {
   const handleDeleteAllEvents = async () => {
     try {
       setDeleting(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
       
-      const response = await fetch('http://localhost:3002/api/calendar-events', {
-        method: 'DELETE',
+      await axios.delete('http://localhost:3002/api/calendar-events', {
         headers: {
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
-      
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to delete all events');
-      }
       
       // Show success message
       setToastMessage('All calendar events have been deleted');
@@ -107,7 +109,7 @@ function CalendarPage() {
       setShowDeleteAllModal(false);
     } catch (err) {
       console.error('Error deleting all events:', err);
-      setError(`Failed to delete all events: ${err.message}`);
+      setError(`Failed to delete all events: ${err.response?.data?.error || err.message}`);
     } finally {
       setDeleting(false);
     }
@@ -129,6 +131,7 @@ function CalendarPage() {
 
   // Map events to FullCalendar format (ensuring they have proper properties)
   const calendarEvents = events.map(event => {
+    console.log('Processing event for calendar:', event);
     // Add robust date handling
     let startDate;
     try {
@@ -146,7 +149,7 @@ function CalendarPage() {
       startDate = new Date();
     }
     
-    return {
+    const formattedEvent = {
       id: event.id, // Use the exact ID from the backend 
       title: event.title || 'Untitled Event',
       start: startDate.toISOString(), // Ensure consistent ISO string format
@@ -160,11 +163,14 @@ function CalendarPage() {
         original: event.original || ''
       }
     };
+    console.log('Formatted event for calendar:', formattedEvent);
+    return formattedEvent;
   });
 
   useEffect(() => {
     if (events.length > 0) {
       console.log('Calendar events loaded:', events.length);
+      console.log('Calendar events:', events);
       // Don't reference calendarEvents here to avoid dependency cycles
     }
   }, [events]);

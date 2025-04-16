@@ -1,48 +1,131 @@
-# Team Atomic Thunder Project
-## COS 420 Project - Align: Sync your tasks with your goals
+# ALIGN - Academic Learning and Information Navigator
 
-### Description
-As a team, we hope to offer a way to make tracking easier and more accessible for students. Prior solutions to tracking assignments are varied, from physical paper planners, to excel spreadsheets, to the notes app in our phones which are very helpful but still lack a wide range of tools. To add on, manually transferring these dates from multiple PDF syllabi into personal calendars is time-consuming and error-prone, leading to missed deadlines and increased academic stress. However, all of these solutions require the commitment constantly updating and maintaining them as new assignments get released, due dates change, and courses progress.
+ALIGN is a comprehensive academic management system designed to help students organize their coursework, track assignments, and manage their academic schedule efficiently.
 
-### Team
-- Project Manager - Zo Carroll (zo.carroll@maine.edu)
-- Designer - Kursten Massey (kursten.massey@maine.edu)
-- Developers - Meghann Manson (meghann.manson@maine.edu), Liv Anderson (liv.anderson@maine.edu), & Siaka Diarra (siaka.diarra@maine.edu)
+## Features
 
-### Meeting Times
-- Regular: Monday & Friday @ 18:15-19:00
-- Backup: Wednesday @ 18:15-19:00
+### 1. Syllabus Management
+- **Upload and Parse**: Upload PDF syllabi and automatically extract important dates and assignments
+- **Smart Date Extraction**: Automatically identifies and categorizes:
+  - Assignments and their due dates
+  - Quizzes and exams
+  - Projects and homework
+  - Lab sessions and deadlines
+- **View and Manage**: Easily view and manage all uploaded syllabi in one place
 
-### Commands to Run the Project
+### 2. Calendar Integration
+- **Automatic Event Creation**: Converts syllabus dates into calendar events
+- **Smart Event Categorization**: Events are automatically categorized by type (assignment, quiz, exam, etc.)
+- **Interactive Calendar**: View all academic events in a user-friendly calendar interface
+- **Event Management**: Add, edit, and delete calendar events as needed
 
-All commands should be run from the root directory of the project (team-atomic-thunder-project)
+### 3. User Management
+- **Secure Authentication**: User registration and login system
+- **Personalized Dashboard**: Each user has their own dashboard with their courses and events
+- **Profile Management**: Update personal information and preferences
 
-1. Make sure to be in "team atomic thunder project" directory, no need to be in src to run code.
+## Technical Stack
 
-Install all dependencies (run this first):
+### Frontend
+- React.js
+- CSS3 for styling
+- Axios for API calls
+- React Calendar for event display
+
+### Backend
+- Node.js with Express
+- PostgreSQL (Neon) for database
+- JWT for authentication
+- PDF parsing for syllabus extraction
+- Multer for file uploads
+
+### Database Schema
+- Users: Stores user information
+- Syllabus_uploads: Tracks uploaded syllabi
+- Calendar_events: Stores extracted events
+- Parsed_text: Stores extracted text from PDFs
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (v14 or higher)
+- PostgreSQL (or Neon database)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run install:all
+git clone https://github.com/6iaka/501-Lop.git
+cd team-atomic-thunder-project
 ```
 
-2. Start both frontend and backend:
+2. Install dependencies:
 ```bash
+# Install backend dependencies
+cd align-app/backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+3. Set up environment variables:
+Create a `.env` file in the backend directory with:
+```
+PORT=3002
+DATABASE_URL=your_neon_database_url
+JWT_SECRET=your_jwt_secret
+CORS_ORIGIN=http://localhost:3003
+```
+
+4. Start the development servers:
+```bash
+# Start backend server
+cd align-app/backend
+npm start
+
+# Start frontend server
+cd ../frontend
 npm start
 ```
 
-This will run:
-- Frontend on http://localhost:3003
-- Backend on http://localhost:3002
+## Usage
 
-To run only frontend:
-```bash
-npm run start:frontend
-```
+1. **Registration and Login**
+   - Create a new account or log in to your existing account
+   - Access your personalized dashboard
 
-To run only backend:
-```bash
-npm run start:backend
-```
+2. **Syllabus Management**
+   - Click "Upload Syllabus" to add a new syllabus
+   - The system will automatically parse the PDF and extract dates
+   - View your uploaded syllabi in the dashboard
 
-### App Running on Teams' Machines
+3. **Calendar View**
+   - Access the calendar to see all your academic events
+   - Events are color-coded by type
+   - Click on events to view details
 
-[Click for screenshot](https://docs.google.com/document/d/13Kg4ABdhLJTuJ48swX5GOtbcQP9ssZEZYW-9z344OJ8/edit?usp=sharing)
+4. **Event Management**
+   - Add new events manually
+   - Edit existing events
+   - Delete events as needed
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Team Atomic Thunder for development
+- Neon for database hosting
+- All contributors and supporters of the project

@@ -172,9 +172,13 @@ function DashboardPage() {
   // get count of future events
   const upcomingCount = mappedEvents.filter(e => new Date(e.date) >= new Date()).length;
   
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
   };
 
   if (!currentUser) {

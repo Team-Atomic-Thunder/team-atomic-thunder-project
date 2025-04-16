@@ -15,7 +15,27 @@ export function AuthProvider({ children }) {
     const userData = localStorage.getItem('user');
     
     if (token && userData) {
-      setCurrentUser(JSON.parse(userData));
+      try {
+        // Basic token validation
+        if (token.split('.').length !== 3) {
+          throw new Error('Invalid token format');
+        }
+
+        // Try to parse the user data
+        const parsedUser = JSON.parse(userData);
+        if (!parsedUser || !parsedUser.id) {
+          throw new Error('Invalid user data');
+        }
+
+        // Set the current user
+        setCurrentUser(parsedUser);
+      } catch (error) {
+        console.error('Error validating auth data:', error);
+        // Clear invalid data
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setCurrentUser(null);
+      }
     }
     setLoading(false);
   }, []);
@@ -72,11 +92,16 @@ export function AuthProvider({ children }) {
 
   const updateEmail = async (email) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
       const response = await axios.put('http://localhost:3002/api/user/email', 
         { email },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${token}`
           }
         }
       );

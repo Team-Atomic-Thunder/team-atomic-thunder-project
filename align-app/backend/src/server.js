@@ -25,8 +25,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// File upload configuration
+// Serve static files from uploads directory
 const uploadsDir = path.join(__dirname, '..', 'uploads');
+app.use('/uploads', express.static(uploadsDir));
+
+// File upload configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadsDir)
@@ -221,23 +224,46 @@ app.post('/api/parse-syllabus', authenticateToken, async (req, res) => {
     }
 
     // Parse PDF
+    console.log('Reading PDF file:', filePath);
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdf(dataBuffer);
+    console.log('PDF parsed successfully, text length:', data.text.length);
     
     // Save extracted text to database
+    console.log('Saving parsed text to database...');
     const parsedTextResult = await query(
       'INSERT INTO parsed_text (syllabus_upload_id, extracted_text) VALUES ($1, $2) RETURNING *',
       [upload.id, data.text]
     );
+    console.log('Parsed text saved with ID:', parsedTextResult.rows[0].id);
 
+    // Extract dates from text
+    console.log('Extracting dates from text...');
     const dates = extractDatesFromText(data.text);
+    console.log('Found dates:', dates);
 
-    // Save parsed dates to database
+    // Save parsed dates to database with proper date formatting
+    console.log('Saving dates to calendar_events table...');
     for (const date of dates) {
-      await query(
-        'INSERT INTO calendar_events (user_id, syllabus_upload_id, event_date, event_title, event_description) VALUES ($1, $2, $3, $4, $5)',
-        [req.user.id, upload.id, date.date, date.title, date.description]
+      const eventDate = new Date(date.date);
+      if (isNaN(eventDate.getTime())) {
+        console.error('Invalid date format:', date.date);
+        continue;
+      }
+
+      console.log('Inserting event:', {
+        userId: req.user.id,
+        uploadId: upload.id,
+        date: eventDate.toISOString(),
+        title: date.title,
+        description: date.description
+      });
+
+      const eventResult = await query(
+        'INSERT INTO calendar_events (user_id, syllabus_upload_id, event_date, event_title, event_description) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [req.user.id, upload.id, eventDate.toISOString(), date.title, date.description]
       );
+      console.log('Event inserted with ID:', eventResult.rows[0].id);
     }
 
     // Update upload status
@@ -261,16 +287,85 @@ app.post('/api/parse-syllabus', authenticateToken, async (req, res) => {
 app.get('/api/calendar-events', authenticateToken, async (req, res) => {
   try {
     console.log('Fetching calendar events for user:', req.user.id);
+    
+    // First check if we have any events in the database
+    const checkResult = await query(
+      'SELECT COUNT(*) FROM calendar_events WHERE user_id = $1',
+      [req.user.id]
+    );
+    console.log('Total events in database:', checkResult.rows[0].count);
+
+    // Check if user exists
+    const userResult = await query(
+      'SELECT * FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    console.log('User found:', userResult.rows[0] ? 'Yes' : 'No');
+
     const result = await query(
-      'SELECT * FROM calendar_events WHERE user_id = $1 ORDER BY event_date',
+      'SELECT id, event_title as title, event_date as start, event_description as description FROM calendar_events WHERE user_id = $1 ORDER BY event_date',
       [req.user.id]
     );
 
-    console.log('Found calendar events:', result.rows.length);
-    res.json(result.rows);
+    console.log('Raw events from database:', result.rows);
+
+    // Format the dates to ISO string
+    const formattedEvents = result.rows.map(event => {
+      console.log('Processing event:', event);
+      const formattedEvent = {
+        ...event,
+        start: new Date(event.start).toISOString(),
+        allDay: true
+      };
+      console.log('Formatted event:', formattedEvent);
+      return formattedEvent;
+    });
+
+    console.log('Found calendar events:', formattedEvents.length);
+    console.log('Sending events to client:', formattedEvents);
+    res.json(formattedEvents);
   } catch (error) {
     console.error('Error fetching calendar events:', error);
     res.status(500).json({ error: 'Error fetching calendar events' });
+  }
+});
+
+// Delete a specific calendar event
+app.delete('/api/calendar-events/:eventId', authenticateToken, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    
+    const result = await query(
+      'DELETE FROM calendar_events WHERE id = $1 AND user_id = $2 RETURNING *',
+      [eventId, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    res.json({ message: 'Event deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting calendar event:', error);
+    res.status(500).json({ error: 'Error deleting calendar event' });
+  }
+});
+
+// Delete all calendar events for a user
+app.delete('/api/calendar-events', authenticateToken, async (req, res) => {
+  try {
+    const result = await query(
+      'DELETE FROM calendar_events WHERE user_id = $1 RETURNING *',
+      [req.user.id]
+    );
+
+    res.json({ 
+      message: 'All calendar events deleted successfully',
+      deletedCount: result.rows.length
+    });
+  } catch (error) {
+    console.error('Error deleting all calendar events:', error);
+    res.status(500).json({ error: 'Error deleting all calendar events' });
   }
 });
 
@@ -288,6 +383,59 @@ app.get('/api/syllabus-uploads', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error fetching syllabus uploads:', error);
     res.status(500).json({ error: 'Error fetching syllabus uploads' });
+  }
+});
+
+// Delete a syllabus upload
+app.delete('/api/syllabus-uploads/:uploadId', authenticateToken, async (req, res) => {
+  try {
+    const { uploadId } = req.params;
+    console.log('Delete request received for upload:', uploadId);
+    console.log('User ID:', req.user.id);
+    
+    // First, get the file information
+    const fileResult = await query(
+      'SELECT * FROM syllabus_uploads WHERE id = $1 AND user_id = $2',
+      [uploadId, req.user.id]
+    );
+
+    if (fileResult.rows.length === 0) {
+      console.log('File not found in database:', uploadId);
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    const file = fileResult.rows[0];
+    console.log('Found file:', file);
+    const filePath = path.join(uploadsDir, file.file_name);
+    console.log('File path:', filePath);
+
+    // Delete the file from the filesystem
+    if (fs.existsSync(filePath)) {
+      console.log('Deleting file from filesystem:', filePath);
+      fs.unlinkSync(filePath);
+    } else {
+      console.log('File not found in filesystem:', filePath);
+    }
+
+    // Delete associated calendar events
+    console.log('Deleting associated calendar events');
+    await query(
+      'DELETE FROM calendar_events WHERE syllabus_upload_id = $1',
+      [uploadId]
+    );
+
+    // Delete the upload record
+    console.log('Deleting upload record from database');
+    await query(
+      'DELETE FROM syllabus_uploads WHERE id = $1 AND user_id = $2',
+      [uploadId, req.user.id]
+    );
+
+    console.log('File deleted successfully');
+    res.json({ message: 'File deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting syllabus upload:', error);
+    res.status(500).json({ error: 'Error deleting syllabus upload' });
   }
 });
 
@@ -312,11 +460,127 @@ app.get('/api/parsed-text/:uploadId', authenticateToken, async (req, res) => {
   }
 });
 
+// Test endpoint for DELETE requests
+app.delete('/api/test', (req, res) => {
+  console.log('Test DELETE request received');
+  res.json({ message: 'DELETE request successful' });
+});
+
 // Helper function to extract dates from text
 function extractDatesFromText(text) {
-  // Your existing date extraction logic here
-  // This is just a placeholder - use your actual implementation
-  return [];
+  console.log('Extracting dates from text...');
+  const dates = [];
+  
+  // Common date patterns
+  const datePatterns = [
+    // Full dates with month names
+    /(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/g,
+    // Month abbreviations
+    /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/g,
+    // MM/DD/YYYY or MM-DD-YYYY
+    /\d{1,2}[\/-]\d{1,2}[\/-]\d{4}/g,
+    // YYYY/MM/DD or YYYY-MM-DD
+    /\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/g,
+    // Weekday dates (e.g., "Monday, January 15, 2024")
+    /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/g,
+    // Weekday abbreviations (e.g., "Mon, Jan 15, 2024")
+    /(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}/g
+  ];
+
+  // Assignment patterns to look for
+  const assignmentPatterns = [
+    // Assignment with due date
+    /Assignment\s+#?\d*\s*[:\-]\s*([^\.]+?)\s*(?:due|by|on)\s*([^\.]+?)(?:\.|$)/gi,
+    // Homework with due date
+    /Homework\s+#?\d*\s*[:\-]\s*([^\.]+?)\s*(?:due|by|on)\s*([^\.]+?)(?:\.|$)/gi,
+    // Project with due date
+    /Project\s+#?\d*\s*[:\-]\s*([^\.]+?)\s*(?:due|by|on)\s*([^\.]+?)(?:\.|$)/gi,
+    // Quiz/Exam with date
+    /(?:Quiz|Exam|Test)\s+#?\d*\s*[:\-]\s*([^\.]+?)\s*(?:on|scheduled for)\s*([^\.]+?)(?:\.|$)/gi,
+    // Lab with due date
+    /Lab\s+#?\d*\s*[:\-]\s*([^\.]+?)\s*(?:due|by|on)\s*([^\.]+?)(?:\.|$)/gi
+  ];
+
+  // First, look for structured assignments
+  for (const pattern of assignmentPatterns) {
+    const matches = text.matchAll(pattern);
+    for (const match of matches) {
+      const [, title, dateStr] = match;
+      try {
+        const date = new Date(dateStr.trim());
+        if (!isNaN(date.getTime())) {
+          dates.push({
+            date: date.toISOString(),
+            title: `Assignment: ${title.trim()}`,
+            description: `Due: ${dateStr.trim()}`
+          });
+          console.log('Found assignment:', {
+            title: title.trim(),
+            date: date.toISOString()
+          });
+        }
+      } catch (err) {
+        console.error('Error parsing assignment date:', dateStr, err);
+      }
+    }
+  }
+
+  // Then look for dates in the text
+  const lines = text.split('\n');
+  for (const line of lines) {
+    // Skip empty lines
+    if (!line.trim()) continue;
+
+    // Skip lines that are too short or don't contain relevant keywords
+    if (line.length < 10 || !/(?:due|by|on|assignment|homework|project|quiz|exam|test|lab)/i.test(line)) {
+      continue;
+    }
+
+    // Check for dates in the line
+    for (const pattern of datePatterns) {
+      const matches = line.match(pattern);
+      if (matches) {
+        for (const match of matches) {
+          try {
+            const date = new Date(match);
+            if (isNaN(date.getTime())) continue;
+
+            // Create a meaningful title
+            const title = line.trim()
+              .replace(/^(?:Assignment|Homework|Project|Quiz|Exam|Test|Lab)\s*#?\d*\s*[:\-]\s*/i, '')
+              .replace(/\s*(?:due|by|on)\s*[^\.]+\.?$/, '')
+              .trim();
+
+            if (title.length > 0) {
+              dates.push({
+                date: date.toISOString(),
+                title: title,
+                description: line.trim()
+              });
+
+              console.log('Found date:', {
+                original: match,
+                parsed: date.toISOString(),
+                title: title
+              });
+            }
+          } catch (err) {
+            console.error('Error parsing date:', match, err);
+          }
+        }
+      }
+    }
+  }
+
+  // Remove duplicates based on date and title
+  const uniqueDates = dates.filter((date, index, self) =>
+    index === self.findIndex(d => 
+      d.date === date.date && d.title === date.title
+    )
+  );
+
+  console.log('Total unique dates found:', uniqueDates.length);
+  return uniqueDates;
 }
 
 // Start server

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, ListGroup, Alert } from 'react-bootstrap';
+import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 import './ViewSyllabus.css';
 
 const ViewSyllabus = () => {
@@ -7,6 +8,8 @@ const ViewSyllabus = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [extracting, setExtracting] = useState(false);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     fetchFiles();
@@ -14,9 +17,18 @@ const ViewSyllabus = () => {
 
   const fetchFiles = async () => {
     try {
-      const response = await fetch('http://localhost:3002/api/files');
-      const data = await response.json();
-      setFiles(data);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await axios.get('http://localhost:3002/api/syllabus-uploads', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      setFiles(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching files:', error);
@@ -25,102 +37,124 @@ const ViewSyllabus = () => {
     }
   };
 
-  const handleViewFile = (filename) => {
-    window.open(`http://localhost:3002/uploads/${filename}`, '_blank');
+  const handleViewFile = (file) => {
+    // Construct the full URL for the file
+    const fileUrl = `http://localhost:3002/uploads/${file.file_name}`;
+    window.open(fileUrl, '_blank');
   };
 
-  const handleDeleteFile = async (filename) => {
+  const handleDeleteFile = async (file) => {
     try {
-      const response = await fetch(`http://localhost:3002/api/files/${encodeURIComponent(filename)}`, {
-        method: 'DELETE',
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      console.log('Attempting to delete file:', file.id);
+      const response = await axios.delete(`http://localhost:3002/api/syllabus-uploads/${file.id}`, {
         headers: {
-          'Accept': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
 
-      // Check if the response is JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned non-JSON response');
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to delete file');
-      }
-
+      console.log('Delete response:', response.data);
       setSuccess('File deleted successfully');
       setError('');
       // Refresh the file list
       fetchFiles();
     } catch (error) {
       console.error('Error deleting file:', error);
-      setError(error.message || 'Failed to delete file');
+      console.error('Error response:', error.response);
+      setError(error.response?.data?.error || 'Failed to delete file');
       setSuccess('');
     }
   };
 
+  const handleExtractDates = async (file) => {
+    try {
+      setExtracting(true);
+      setError('');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await axios.post('http://localhost:3002/api/parse-syllabus', 
+        { uploadId: file.id },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      console.log('Parse response:', response.data);
+      setSuccess('Dates extracted successfully! Check your calendar.');
+    } catch (error) {
+      console.error('Error extracting dates:', error);
+      setError(error.response?.data?.error || 'Failed to extract dates');
+    } finally {
+      setExtracting(false);
+    }
+  };
+
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <Card className="shadow">
-            <Card.Body className="p-4">
-              <h2 className="text-center mb-4">Uploaded Syllabi</h2>
-              
-              {error && (
-                <Alert variant="danger" className="mb-4">
-                  {error}
-                </Alert>
-              )}
+    <div className="view-syllabus">
+      <h2>Uploaded Syllabi</h2>
+      
+      {error && (
+        <div className="alert alert-danger">
+          {error}
+        </div>
+      )}
 
-              {success && (
-                <Alert variant="success" className="mb-4">
-                  {success}
-                </Alert>
-              )}
+      {success && (
+        <div className="alert alert-success">
+          {success}
+        </div>
+      )}
 
-              {loading ? (
-                <div className="text-center">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              ) : files.length === 0 ? (
-                <div className="text-center text-muted">
-                  No files uploaded yet
-                </div>
-              ) : (
-                <ListGroup>
-                  {files.map((file, index) => (
-                    <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
-                      <span className="file-name">{file}</span>
-                      <div className="d-flex gap-2">
-                        <Button 
-                          variant="primary" 
-                          size="sm"
-                          onClick={() => handleViewFile(file)}
-                        >
-                          View
-                        </Button>
-                        <Button 
-                          variant="danger" 
-                          size="sm"
-                          onClick={() => handleDeleteFile(file)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+      {loading ? (
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : files.length === 0 ? (
+        <div className="text-center text-muted">
+          No files uploaded yet
+        </div>
+      ) : (
+        <div className="file-list">
+          {files.map((file) => (
+            <div key={file.id} className="file-item">
+              <span className="file-name">{file.file_name}</span>
+              <div className="d-flex gap-2">
+                <button 
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleViewFile(file)}
+                >
+                  View
+                </button>
+                <button 
+                  className="btn btn-success btn-sm"
+                  onClick={() => handleExtractDates(file)}
+                  disabled={extracting}
+                >
+                  {extracting ? 'Extracting...' : 'Extract Dates'}
+                </button>
+                <button 
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteFile(file)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
