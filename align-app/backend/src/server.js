@@ -466,6 +466,37 @@ app.delete('/api/test', (req, res) => {
   res.json({ message: 'DELETE request successful' });
 });
 
+// Test database connection endpoint
+app.get('/api/test-db', async (req, res) => {
+  try {
+    // Test database connection
+    const result = await query('SELECT NOW()');
+    console.log('Database connection successful:', result.rows[0]);
+    
+    // Check if users table exists
+    const tableCheck = await query(
+      "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users')"
+    );
+    console.log('Users table exists:', tableCheck.rows[0].exists);
+    
+    // Count users in table
+    const userCount = await query('SELECT COUNT(*) FROM users');
+    console.log('Number of users:', userCount.rows[0].count);
+    
+    res.json({
+      databaseConnected: true,
+      usersTableExists: tableCheck.rows[0].exists,
+      userCount: userCount.rows[0].count
+    });
+  } catch (error) {
+    console.error('Database test error:', error);
+    res.status(500).json({
+      error: 'Database connection failed',
+      details: error.message
+    });
+  }
+});
+
 // Helper function to extract dates from text
 function extractDatesFromText(text) {
   console.log('Extracting dates from text...');
