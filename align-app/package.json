@@ -5,8 +5,8 @@
   "scripts": {
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    "start:frontend": "react-scripts start",
+    "install:all": "npm install && cd backend && npm install"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
@@ -17,6 +17,7 @@
     "concurrently": "^8.2.2",
     "pdf-parse": "^1.1.1",
     "react-bootstrap": "^2.10.9",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "react-scripts": "^5.0.1"
   }
 }
