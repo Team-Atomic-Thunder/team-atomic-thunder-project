@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from './firebase-config';
 
 // Components
+import Navigation from './components/layout/Navigation';
 import HomePage from './HomePage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
@@ -40,59 +41,11 @@ function App() {
     return children;
   };
 
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      // onAuthStateChanged will handle updating the state
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  };
-
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">
-        {/* Header with Navigation */}
-        <header className="header">
-          <div className="container d-flex justify-content-between align-items-center">
-            <h1 className="h4 mb-0">Align</h1>
-            
-            <nav>
-              <ul className="list-unstyled d-flex mb-0">
-                {currentUser ? (
-                  <>
-                    <li className="me-3">
-                      <Link to="/dashboard" className="text-white text-decoration-none">Dashboard</Link>
-                    </li>
-                    <li className="me-3">
-                      <Link to="/upload" className="text-white text-decoration-none">Upload</Link>
-                    </li>
-                    <li className="me-3">
-                      <Link to="/calendar" className="text-white text-decoration-none">Calendar</Link>
-                    </li>
-                    <li>
-                      <button 
-                        onClick={handleLogout}
-                        className="btn btn-link text-white text-decoration-none p-0"
-                      >
-                        Logout
-                      </button>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li className="me-3">
-                      <Link to="/login" className="text-white text-decoration-none">Login</Link>
-                    </li>
-                    <li>
-                      <Link to="/signup" className="text-white text-decoration-none">Sign Up</Link>
-                    </li>
-                  </>
-                )}
-              </ul>
-            </nav>
-          </div>
-        </header>
+        {/* Navigation */}
+        <Navigation />
 
         {/* Main Content */}
         <main className="flex-grow-1">
@@ -122,7 +75,6 @@ function App() {
             {/* Fallback Route */}
             <Route path="*" element={<HomePage currentUser={currentUser} />} />
           </Routes>
-
         </main>
 
         {/* Simple Footer */}
