@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { app } from './../firebase-config';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { app } from './../firebase-config';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -15,11 +15,23 @@ function SignUp() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
+
   
-  // init Firebase auth and firestore
+  // Initialize Firebase auth and firestore
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  console.log("Firebase auth initialized:", !!auth);
+  console.log("Firestore initialized:", !!db);
+
+  // navigate to dashboard if signup is successful
+  useEffect(() => {
+    if (signupSuccess) {
+      navigate('/dashboard');
+    }
+  }, [signupSuccess, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +42,6 @@ function SignUp() {
   };
 
   const validateForm = () => {
-    // reset error
     setError('');
 
     // verify fields are filled out
@@ -64,41 +75,53 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
     
     if (!validateForm()) {
+      console.log("Form validation failed");
       return;
     }
     
+    console.log("Form validation passed");
     setLoading(true);
     
     try {
-      // create user with Firebase auth
+      // Create user with Firebase auth
+      console.log("Attempting to create user with Firebase auth...");
       const userCredential = await createUserWithEmailAndPassword(
         auth, 
         formData.email, 
         formData.password
       );
       
+      console.log("User created successfully:", userCredential);
       const user = userCredential.user;
+
+      setSignupSuccess(true);
       
-      // update user profile with display name
+      // Update user profile with display name
+      console.log("Updating user profile...");
       await updateProfile(user, {
         displayName: `${formData.firstName} ${formData.lastName}`
       });
+      console.log("User profile updated successfully");
       
-      // store user data in firestore
-      await setDoc(doc(db, "users", user.uid), {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        createdAt: new Date().toISOString()
-      });
-      
-      navigate('/dashboard');
+        // Store user data in firestore
+        console.log("Storing user data in Firestore...");
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          createdAt: new Date().toISOString()
+        });
+
+      // debug logs
+      console.log("User data stored in Firestore successfully");
+  
     } catch (error) {
       console.error('Signup error:', error);
       
-      // error handling common firebase errors
+      // Error handling common Firebase errors
       switch (error.code) {
         case 'auth/email-already-in-use':
           setError('This email is already in use. Try logging in instead.');
@@ -110,12 +133,13 @@ function SignUp() {
           setError('Password is too weak. Please use a stronger password.');
           break;
         default:
-          setError('Failed to create an account. Please try again.');
+          setError(`Failed to create an account: ${error.message}`);
       }
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <Container className="py-5">
