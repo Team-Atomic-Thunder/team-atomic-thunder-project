@@ -47,8 +47,8 @@ function Login() {
       );
       
       console.log("Login successful, navigating to dashboard");
-      // The onAuthStateChanged listener in App.js will detect the authentication
       navigate('/dashboard');
+      
     } catch (error) {
       console.error('Login error:', error);
       

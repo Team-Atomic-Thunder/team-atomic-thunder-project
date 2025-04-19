@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from './firebase-config';
 
 // Components
@@ -18,20 +18,29 @@ function App() {
   const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
 
+  // Set up Firebase auth state listener
   useEffect(() => {
-    // listen for auth state changes using Firebase mechanism
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Auth state changed:", user);
       setCurrentUser(user);
       setLoading(false);
     });
 
-    // Cleanup subscription
+    // Clean up the listener when component unmounts
     return () => unsubscribe();
   }, [auth]);
 
-  // protect routes
+  // Simple component to protect routes
   const RequireAuth = ({ children }) => {
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+      return (
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" }}>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
+    }
     
     if (!currentUser) {
       return <Navigate to="/login" />;
@@ -42,8 +51,8 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await auth.signOut();
-      // onAuthStateChanged will handle updating the state
+      await signOut(auth);
+      // The auth state change will trigger the onAuthStateChanged listener
     } catch (error) {
       console.error("Error signing out: ", error);
     }
@@ -122,7 +131,6 @@ function App() {
             {/* Fallback Route */}
             <Route path="*" element={<HomePage currentUser={currentUser} />} />
           </Routes>
-
         </main>
 
         {/* Simple Footer */}
