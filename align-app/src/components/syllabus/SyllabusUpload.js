@@ -195,7 +195,7 @@ const SyllabusUpload = () => {
         fileSize: file.size,
         lastModified: file.lastModified
       });
-      
+
       console.log('Text content stored in Firestore successfully:', docRef.id);
       
       setSuccess('Syllabus processed successfully');
@@ -241,15 +241,15 @@ const SyllabusUpload = () => {
       
       const syllabusDoc = querySnapshot.docs[0];
       const syllabusData = syllabusDoc.data();
-      
+
       // Double-check the syllabus belongs to the current user
       if (syllabusData.userId !== auth.currentUser.uid) {
         throw new Error('Unauthorized access to syllabus');
       }
-      
+
       console.log('Retrieved syllabus data:', syllabusData.originalName);
       console.log('Syllabus content preview:', syllabusData.content.substring(0, 500));
-      
+
       // Extract events from the text
       const events = extractEvents(syllabusData.content);
       
@@ -268,8 +268,8 @@ const SyllabusUpload = () => {
         const date = new Date(event.date);
         console.log('Parsed date:', date);
         if (!isNaN(date.getTime())) {
-          batch.push(addDoc(eventsRef, {
-            userId: auth.currentUser.uid,
+        batch.push(addDoc(eventsRef, {
+          userId: auth.currentUser.uid,
             syllabusId: syllabusDoc.id,
             title: event.name,
             type: event.type,
@@ -277,7 +277,7 @@ const SyllabusUpload = () => {
             description: event.time || '',
             createdAt: serverTimestamp(),
             status: 'active'
-          }));
+        }));
         } else {
           console.warn('Invalid date format:', event.date, 'for event:', event.name);
         }
@@ -695,14 +695,14 @@ const SyllabusUpload = () => {
               {/* Upload button */}
               {file && !isUploaded && !isParsing && (
                 <div className="mt-3 text-center">
-                  <Button 
-                    variant="primary" 
-                    onClick={handleSubmit}
+                <Button 
+                  variant="primary" 
+                  onClick={handleSubmit} 
                     disabled={isParsing}
-                  >
+                >
                     Process Syllabus
-                  </Button>
-                </div>
+                </Button>
+              </div>
               )}
 
               {/* Extract button */}
@@ -715,7 +715,7 @@ const SyllabusUpload = () => {
                   >
                     Extract Dates
                   </Button>
-                </div>
+                      </div>
               )}
 
               {/* Loading indicator */}

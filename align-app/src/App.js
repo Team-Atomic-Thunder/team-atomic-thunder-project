@@ -1,18 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faTasks, faUsers } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from './firebase-config';
+import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 
 // Components
-import Navigation from './components/layout/Navigation';
 import HomePage from './HomePage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import DashboardPage from './pages/Dashboard';
 import SyllabusUpload from './components/syllabus/SyllabusUpload';
 import CalendarPage from './pages/Calendar';
+
+// Navigation component
+const Navigation = () => {
+  const location = useLocation();
+  const auth = getAuth(app);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, [auth]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  return (
+    <Navbar expand="lg" className="custom-navbar">
+      <Container>
+        <Navbar.Brand as={Link} to="/" className="navbar-brand">
+          <span className="brand-text">ALIGN</span>
+        </Navbar.Brand>
+        
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            {currentUser ? (
+              <>
+                <Nav.Link as={Link} to="/dashboard" active={location.pathname === '/dashboard'}>
+                  <FontAwesomeIcon icon={faTasks} className="me-2" />
+                  Dashboard
+                </Nav.Link>
+                <Nav.Link as={Link} to="/upload" active={location.pathname === '/upload'}>
+                  <FontAwesomeIcon icon={faUsers} className="me-2" />
+                  Upload
+                </Nav.Link>
+                <Nav.Link as={Link} to="/calendar" active={location.pathname === '/calendar'}>
+                  <FontAwesomeIcon icon={faCalendar} className="me-2" />
+                  Calendar
+                </Nav.Link>
+                <Button 
+                  variant="outline-light" 
+                  className="logout-button ms-2"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login" active={location.pathname === '/login'}>
+                  Login
+                </Nav.Link>
+                <Nav.Link as={Link} to="/signup" active={location.pathname === '/signup'}>
+                  Sign Up
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+};
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
