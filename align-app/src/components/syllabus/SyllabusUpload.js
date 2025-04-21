@@ -4,11 +4,10 @@ import { getFirestore, collection, addDoc, serverTimestamp, query, where, orderB
 import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase-config';
 import * as pdfjsLib from 'pdfjs-dist';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import '../../App.css';
 
 // Set the worker source for pdf.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // Main component for uploading and processing syllabi
 const SyllabusUpload = () => {
@@ -17,7 +16,7 @@ const SyllabusUpload = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isDragging, setIsDragging] = useState(false);
-  const [parsedDates, setParsedDates] = useState(null);
+
   const [isParsing, setIsParsing] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const [dbConnected, setDbConnected] = useState(false);
