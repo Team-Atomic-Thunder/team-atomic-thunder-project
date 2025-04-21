@@ -1,19 +1,26 @@
 import React, { useState, useRef } from 'react';
 import { Container, Row, Col, Button, Card, Alert } from 'react-bootstrap';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { app } from '../../firebase-config';
 import '../../App.css';
 
 // Main component for uploading and processing syllabi
 const SyllabusUpload = () => {
   // State management
-  const [file, setFile] = useState(null); // the actual file
-  // Removed unused state: uploadProgress and setUploadProgress
+  const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isDragging, setIsDragging] = useState(false); // drag and drop visual feedback
-  const [parsedDates, setParsedDates] = useState(null); // dates extracted from pdf
-  const [isParsing, setIsParsing] = useState(false); // loading state
-  const [serverFileName, setServerFileName] = useState(''); // filename on server after upload
-  const fileInputRef = useRef(null); // ref for the hidden file input
+  const [isDragging, setIsDragging] = useState(false);
+  const [parsedDates, setParsedDates] = useState(null);
+  const [isParsing, setIsParsing] = useState(false);
+  const fileInputRef = useRef(null);
+
+  // Initialize Firebase services
+  const storage = getStorage(app);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
   // Bunch of drag and drop event handlers
   // Tried to consolidate these but it caused bugs so keeping them separate for now
@@ -78,100 +85,119 @@ const SyllabusUpload = () => {
       return;
     }
 
-    // Prepare file for upload
-    const formData = new FormData();
-    formData.append('file', file);
-
+    setIsParsing(true);
     try {
-      // Send to server
-      const response = await fetch('http://localhost:3002/api/upload', {
-        method: 'POST',
-        body: formData
+      // Create a unique filename
+      const timestamp = Date.now();
+      const filename = `${file.name}`;
+      
+      // Create a reference to the file location in Firebase Storage
+      const storageRef = ref(storage, `syllabi/${auth.currentUser.uid}/${filename}`);
+      
+      // Upload the file
+      const snapshot = await uploadBytes(storageRef, file);
+      
+      // Get the download URL
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      // Store file metadata in Firestore
+      await addDoc(collection(db, 'syllabi'), {
+        userId: auth.currentUser.uid,
+        filename: filename,
+        originalName: file.name,
+        downloadURL: downloadURL,
+        uploadedAt: serverTimestamp(),
+        status: 'pending_parse'
       });
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      // Parse response
-      const data = await response.json();
-      console.log("Upload response:", data); // for debugging
-      
-      // Store filename for later use with the parsing API
-      setServerFileName(data.filename);
       setSuccess('File uploaded successfully');
-      
-      // If server already sent back parsed dates, show them
-      if (data.parsedDates) {
-        setParsedDates(data.parsedDates);
-      }
-      
       setError('');
+      
+      // Start parsing the file
+      handleParseAndAddToCalendar(filename, downloadURL);
+      
     } catch (error) {
       console.error('Error uploading file:', error);
-      setError('Error uploading file. Check your connection and try again.');
+      setError('Error uploading file. Please try again.');
+      setIsParsing(false);
     }
   };
 
   // Extract dates from the uploaded syllabus and add to calendar
-  // This is a 2-step process: parse PDF, then save dates to calendar
-  const handleParseAndAddToCalendar = async () => {
-    if (!serverFileName) {
-      setError('No file has been uploaded successfully');
-      return;
-    }
-    
+  const handleParseAndAddToCalendar = async (filename, downloadURL) => {
     setIsParsing(true);
     setError('');
     
     try {
+      // Set a timeout for the parsing process
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Parsing timed out after 30 seconds')), 30000);
+      });
+
       // Step 1: Parse the PDF to extract dates
-      const parseResponse = await fetch('http://localhost:3002/api/parse-syllabus', {
+      const parsePromise = fetch('http://localhost:3002/api/parse-syllabus', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ filename: serverFileName }),
+        body: JSON.stringify({ 
+          filename: filename,
+          downloadURL: downloadURL 
+        }),
       });
 
-      const parseData = await parseResponse.json();
-
+      // Race between the fetch and timeout
+      const parseResponse = await Promise.race([parsePromise, timeoutPromise]);
+      
       if (!parseResponse.ok) {
-        throw new Error(parseData.error || 'Failed to parse syllabus');
+        throw new Error('Failed to parse syllabus');
       }
+
+      const parseData = await parseResponse.json();
 
       // Check if we found any dates
       if (!parseData.dates || parseData.dates.length === 0) {
         setError('No dates were found in the syllabus. Please check if the PDF contains assignment dates.');
+        setIsParsing(false);
         return;
       }
 
       // Update the UI with found dates
       setParsedDates(parseData.dates);
       
-      // Step 2: Save the dates to the calendar
-      const saveResponse = await fetch('http://localhost:3002/api/save-calendar-events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ events: parseData.dates }),
-      });
+      // Step 2: Save the dates to Firestore
+      const eventsRef = collection(db, 'calendarEvents');
+      const batch = [];
       
-      const saveData = await saveResponse.json();
-      
-      if (!saveResponse.ok) {
-        throw new Error(saveData.error || 'Failed to save events to calendar');
+      for (const event of parseData.dates) {
+        batch.push(addDoc(eventsRef, {
+          userId: auth.currentUser.uid,
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          description: event.description || '',
+          syllabusId: filename,
+          createdAt: serverTimestamp()
+        }));
       }
       
-      // Success - let the user know!
+      await Promise.all(batch);
+      
+      // Update the syllabus document to mark it as parsed
+      const syllabusRef = collection(db, 'syllabi');
+      await addDoc(syllabusRef, {
+        userId: auth.currentUser.uid,
+        filename: filename,
+        status: 'parsed',
+        parsedAt: serverTimestamp(),
+        eventCount: parseData.dates.length
+      });
+      
       setSuccess(`Success! Found ${parseData.dates.length} dates and added them to your calendar.`);
     } catch (error) {
-      // Something went wrong
       console.error('Error processing syllabus:', error);
-      setError(`Error: ${error.message}. Please make sure the PDF is readable and contains text.`);
+      setError(`Error: ${error.message}. Please try again with a different file or contact support if the problem persists.`);
     } finally {
-      // Always stop loading indicator even if there was an error
       setIsParsing(false);
     }
   };
@@ -239,25 +265,11 @@ const SyllabusUpload = () => {
                   variant="primary" 
                   onClick={handleSubmit} 
                   className="w-100"
-                  disabled={!file}
+                  disabled={!file || isParsing}
                 >
-                  Upload Syllabus
+                  {isParsing ? 'Uploading and Processing...' : 'Upload Syllabus'}
                 </Button>
               </div>
-
-              {/* Parse button - only show if file uploaded successfully */}
-              {serverFileName && (
-                <div className="mt-3">
-                  <Button 
-                    variant="outline-primary" 
-                    onClick={handleParseAndAddToCalendar} 
-                    className="w-100"
-                    disabled={isParsing}
-                  >
-                    {isParsing ? 'Processing...' : 'Extract Dates & Add to Calendar'}
-                  </Button>
-                </div>
-              )}
 
               {/* Show parsed dates if any */}
               {parsedDates && parsedDates.length > 0 && (
