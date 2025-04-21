@@ -1,10 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Container, Row, Col, Button, Card, Alert } from 'react-bootstrap';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, serverTimestamp, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase-config';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import '../../App.css';
+
+// Set the worker source for pdf.js
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 // Main component for uploading and processing syllabi
 const SyllabusUpload = () => {
@@ -15,12 +19,71 @@ const SyllabusUpload = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [parsedDates, setParsedDates] = useState(null);
   const [isParsing, setIsParsing] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [dbConnected, setDbConnected] = useState(false);
   const fileInputRef = useRef(null);
 
   // Initialize Firebase services
-  const storage = getStorage(app);
   const db = getFirestore(app);
   const auth = getAuth(app);
+
+  // Test Firestore connection on component mount
+  useEffect(() => {
+    const testFirestoreConnection = async () => {
+      try {
+        console.log('Testing Firestore connection...');
+        console.log('Current user:', auth.currentUser?.uid || 'Not logged in');
+        
+        if (!auth.currentUser) {
+          throw new Error('User not authenticated');
+        }
+
+        // Try to write a test document
+        console.log('Attempting to write test document...');
+        const testDoc = await addDoc(collection(db, 'test_connection'), {
+          userId: auth.currentUser.uid,
+          timestamp: serverTimestamp(),
+          test: true
+        });
+        
+        console.log('Successfully wrote test document:', testDoc.id);
+        
+        // Try to read it back
+        console.log('Attempting to read test document...');
+        const testQuery = query(
+          collection(db, 'test_connection'), 
+          where('userId', '==', auth.currentUser.uid)
+        );
+        const querySnapshot = await getDocs(testQuery);
+        
+        if (querySnapshot.empty) {
+          throw new Error('Could not read back test document');
+        }
+        
+        console.log('Successfully read test document');
+        setDbConnected(true);
+        
+      } catch (error) {
+        console.error('Firestore connection test failed:', error);
+        console.error('Error details:', {
+          name: error.name,
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
+        setError(`Database connection failed: ${error.message}`);
+        setDbConnected(false);
+      }
+    };
+
+    // Only test connection if user is authenticated
+    if (auth.currentUser) {
+      testFirestoreConnection();
+    } else {
+      setError('Please log in to access the database');
+      setDbConnected(false);
+    }
+  }, [db, auth.currentUser]);
 
   // Bunch of drag and drop event handlers
   // Tried to consolidate these but it caused bugs so keeping them separate for now
@@ -85,121 +148,192 @@ const SyllabusUpload = () => {
       return;
     }
 
-    setIsParsing(true);
-    try {
-      // Create a unique filename
-      const timestamp = Date.now();
-      const filename = `${file.name}`;
-      
-      // Create a reference to the file location in Firebase Storage
-      const storageRef = ref(storage, `syllabi/${auth.currentUser.uid}/${filename}`);
-      
-      // Upload the file
-      const snapshot = await uploadBytes(storageRef, file);
-      
-      // Get the download URL
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      
-      // Store file metadata in Firestore
-      await addDoc(collection(db, 'syllabi'), {
-        userId: auth.currentUser.uid,
-        filename: filename,
-        originalName: file.name,
-        downloadURL: downloadURL,
-        uploadedAt: serverTimestamp(),
-        status: 'pending_parse'
-      });
+    // Check if user is authenticated
+    if (!auth.currentUser) {
+      setError('You must be logged in to upload files');
+      return;
+    }
 
-      setSuccess('File uploaded successfully');
-      setError('');
+    setIsParsing(true);
+    setError('');
+
+    try {
+      console.log('Starting PDF processing...');
       
-      // Start parsing the file
-      handleParseAndAddToCalendar(filename, downloadURL);
+      // Read the PDF file
+      console.log('Reading file as array buffer...');
+      const arrayBuffer = await file.arrayBuffer();
+      console.log('File read successfully');
+      
+      // Load the PDF document
+      console.log('Loading PDF document...');
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      console.log('PDF loaded successfully, number of pages:', pdf.numPages);
+      
+      let fullText = '';
+      
+      // Extract text from each page
+      for (let i = 1; i <= pdf.numPages; i++) {
+        console.log(`Processing page ${i} of ${pdf.numPages}...`);
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+        console.log(`Page ${i} processed successfully`);
+      }
+      
+      console.log('PDF text extracted successfully');
+      
+      // Store the text content in Firestore
+      console.log('Storing text content in Firestore...');
+      const docRef = await addDoc(collection(db, 'syllabi'), {
+        userId: auth.currentUser.uid,
+        originalName: file.name,
+        content: fullText,
+        uploadedAt: serverTimestamp(),
+        status: 'uploaded',
+        fileSize: file.size,
+        lastModified: file.lastModified
+      });
+      
+      console.log('Text content stored in Firestore successfully:', docRef.id);
+      
+      setSuccess('Syllabus processed and stored successfully');
+      setIsUploaded(true);
+      setIsParsing(false);
       
     } catch (error) {
-      console.error('Error uploading file:', error);
-      setError('Error uploading file. Please try again.');
+      console.error('Error processing PDF:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      setError(`Error processing PDF: ${error.message}`);
       setIsParsing(false);
     }
   };
 
-  // Extract dates from the uploaded syllabus and add to calendar
-  const handleParseAndAddToCalendar = async (filename, downloadURL) => {
+  const handleExtractDates = async () => {
+    if (!isUploaded) return;
+    
     setIsParsing(true);
     setError('');
     
     try {
-      // Set a timeout for the parsing process
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Parsing timed out after 30 seconds')), 30000);
-      });
-
-      // Step 1: Parse the PDF to extract dates
-      const parsePromise = fetch('http://localhost:3002/api/parse-syllabus', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          filename: filename,
-          downloadURL: downloadURL 
-        }),
-      });
-
-      // Race between the fetch and timeout
-      const parseResponse = await Promise.race([parsePromise, timeoutPromise]);
+      console.log('Starting date extraction...');
       
-      if (!parseResponse.ok) {
-        throw new Error('Failed to parse syllabus');
-      }
-
-      const parseData = await parseResponse.json();
-
-      // Check if we found any dates
-      if (!parseData.dates || parseData.dates.length === 0) {
-        setError('No dates were found in the syllabus. Please check if the PDF contains assignment dates.');
-        setIsParsing(false);
-        return;
-      }
-
-      // Update the UI with found dates
-      setParsedDates(parseData.dates);
+      // Get the latest uploaded syllabus
+      const syllabiRef = collection(db, 'syllabi');
+      const q = query(syllabiRef, 
+        where('userId', '==', auth.currentUser.uid),
+        orderBy('uploadedAt', 'desc'),
+        limit(1)
+      );
       
-      // Step 2: Save the dates to Firestore
+      console.log('Querying Firestore for latest syllabus...');
+      const querySnapshot = await getDocs(q);
+      
+      if (querySnapshot.empty) {
+        throw new Error('No syllabus found');
+      }
+      
+      const syllabusDoc = querySnapshot.docs[0];
+      const syllabusData = syllabusDoc.data();
+      console.log('Retrieved syllabus data:', syllabusData.originalName);
+      
+      // Extract dates from the text
+      const text = syllabusData.content;
+      const dates = extractDatesFromText(text);
+      
+      if (dates.length === 0) {
+        throw new Error('No dates found in the syllabus');
+      }
+      
+      // Store dates in calendarEvents collection
       const eventsRef = collection(db, 'calendarEvents');
       const batch = [];
       
-      for (const event of parseData.dates) {
+      for (const event of dates) {
         batch.push(addDoc(eventsRef, {
           userId: auth.currentUser.uid,
+          syllabusId: syllabusDoc.id,
           title: event.title,
           start: event.start,
-          end: event.end,
+          end: event.end || event.start, // If no end date, use start date
           description: event.description || '',
-          syllabusId: filename,
           createdAt: serverTimestamp()
         }));
       }
       
       await Promise.all(batch);
       
-      // Update the syllabus document to mark it as parsed
-      const syllabusRef = collection(db, 'syllabi');
-      await addDoc(syllabusRef, {
-        userId: auth.currentUser.uid,
-        filename: filename,
-        status: 'parsed',
-        parsedAt: serverTimestamp(),
-        eventCount: parseData.dates.length
-      });
+      setSuccess(`Successfully extracted ${dates.length} dates and added them to your calendar!`);
       
-      setSuccess(`Success! Found ${parseData.dates.length} dates and added them to your calendar.`);
     } catch (error) {
-      console.error('Error processing syllabus:', error);
-      setError(`Error: ${error.message}. Please try again with a different file or contact support if the problem persists.`);
+      console.error('Error extracting dates:', error);
+      setError(`Error extracting dates: ${error.message}`);
     } finally {
       setIsParsing(false);
     }
+  };
+
+  // Helper function to extract dates from text
+  const extractDatesFromText = (text) => {
+    const dates = [];
+    
+    // Common date patterns in syllabi
+    const datePatterns = [
+      // MM/DD/YYYY or MM-DD-YYYY
+      /(\d{1,2})[/-](\d{1,2})[/-](\d{4})/g,
+      // Month DD, YYYY
+      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})/gi,
+      // DD Month YYYY
+      /(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/gi
+    ];
+    
+    // Look for assignment or event titles near dates
+    const lines = text.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Skip empty lines
+      if (!line.trim()) continue;
+      
+      // Check each date pattern
+      for (const pattern of datePatterns) {
+        const matches = line.matchAll(pattern);
+        for (const match of matches) {
+          const dateStr = match[0];
+          let date;
+          
+          try {
+            // Try to parse the date
+            date = new Date(dateStr);
+            if (isNaN(date.getTime())) continue;
+            
+            // Look for a title in the line or previous line
+            let title = line.trim();
+            if (title.length > 50) {
+              // If line is too long, try to find a shorter title
+              const words = title.split(' ');
+              title = words.slice(0, 5).join(' '); // Take first 5 words
+            }
+            
+            // Add the date to our list
+            dates.push({
+              title: title || 'Untitled Event',
+              start: date.toISOString(),
+              description: line.trim()
+            });
+          } catch (e) {
+            console.warn('Failed to parse date:', dateStr, e);
+          }
+        }
+      }
+    }
+    
+    return dates;
   };
 
   return (
@@ -210,21 +344,28 @@ const SyllabusUpload = () => {
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">Upload Syllabus</h2>
               
-              {/* Show error message if there is one */}
+              {/* Database connection status */}
+              {!dbConnected && (
+                <Alert variant="warning" className="mb-4">
+                  Connecting to database...
+                </Alert>
+              )}
+
+              {/* Error message */}
               {error && (
                 <Alert variant="danger" className="mb-4">
                   {error}
                 </Alert>
               )}
 
-              {/* Show success message if operation succeeded */}
+              {/* Success message */}
               {success && (
                 <Alert variant="success" className="mb-4">
                   {success}
                 </Alert>
               )}
 
-              {/* Drag & drop area - this was tricky to get right */}
+              {/* Drag and drop area */}
               <div
                 className={`file-input-container ${isDragging ? 'dragging' : ''}`}
                 onDragEnter={handleDragEnter}
@@ -247,7 +388,7 @@ const SyllabusUpload = () => {
                 </div>
               </div>
 
-              {/* Show file info if a file is selected */}
+              {/* File info */}
               {file && (
                 <div className="file-info mt-3">
                   <p className="mb-0">
@@ -260,29 +401,38 @@ const SyllabusUpload = () => {
               )}
 
               {/* Upload button */}
-              <div className="mt-4">
-                <Button 
-                  variant="primary" 
-                  onClick={handleSubmit} 
-                  className="w-100"
-                  disabled={!file || isParsing}
-                >
-                  {isParsing ? 'Uploading and Processing...' : 'Upload Syllabus'}
-                </Button>
-              </div>
+              {file && !isUploaded && !isParsing && (
+                <div className="mt-3 text-center">
+                  <Button 
+                    variant="primary" 
+                    onClick={handleSubmit}
+                    disabled={isParsing}
+                  >
+                    Process Syllabus
+                  </Button>
+                </div>
+              )}
 
-              {/* Show parsed dates if any */}
-              {parsedDates && parsedDates.length > 0 && (
-                <div className="mt-4">
-                  <h5>Extracted Dates ({parsedDates.length})</h5>
-                  <div className="parsed-dates-container">
-                    {parsedDates.map((date, index) => (
-                      <div key={index} className="parsed-date-item">
-                        <div className="date-title">{date.title}</div>
-                        <div className="date-value">{new Date(date.start).toLocaleDateString()}</div>
-                      </div>
-                    ))}
+              {/* Extract button */}
+              {isUploaded && !isParsing && (
+                <div className="mt-3 text-center">
+                  <Button 
+                    variant="success" 
+                    onClick={handleExtractDates}
+                    disabled={isParsing}
+                  >
+                    Extract Dates
+                  </Button>
+                </div>
+              )}
+
+              {/* Loading indicator */}
+              {isParsing && (
+                <div className="text-center mt-3">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
                   </div>
+                  <p className="mt-2">Processing syllabus...</p>
                 </div>
               )}
             </Card.Body>
