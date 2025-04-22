@@ -395,6 +395,7 @@ a:hover {
 }
 
 .navbar-brand {
+  font-family: var(--font-primary);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-light) !important;
@@ -404,6 +405,7 @@ a:hover {
 }
 
 .nav-link {
+  font-family: var(--font-primary);
   color: var(--color-light) !important;
   font-weight: 500;
   padding: 0.5rem 1rem !important;
