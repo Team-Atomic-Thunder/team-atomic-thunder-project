@@ -5,6 +5,8 @@ import { getFirestore, collection, query, where, onSnapshot, deleteDoc, getDocs 
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase-config';
 
+import { handleExportToICS } from '../components/fileExport/FileExport';
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -15,6 +17,8 @@ function CalendarPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -246,8 +250,13 @@ function CalendarPage() {
               <ListGroup.Item action>
                 Configure Notifications
               </ListGroup.Item>
-              <ListGroup.Item action>
-                Export Calendar
+              <ListGroup.Item>
+                <Button 
+                  variant="info" 
+                  onClick={() => handleExportToICS(setError, setSuccess)}
+                >
+                Export to .ICS
+              </Button>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button 
