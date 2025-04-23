@@ -24,41 +24,45 @@ export const handleExportToICS = async (setError, setSuccess) => {
       console.log('Events fetched:', events); // Debugging log
   
       // Map events to ICS format
-      const icsEvents = events.map(event => {
-        const startDate = new Date(event.start); // Convert ISO string to Date object
-        if (isNaN(startDate.getTime())) {
-          console.warn('Invalid date for event:', event);
-          return null; // Skip invalid events
-        }
-  
-        // Map Firestore status to valid ICS status
-        const validStatus = {
-          active: 'CONFIRMED',
-          cancelled: 'CANCELLED',
-          tentative: 'TENTATIVE',
-        };
-  
-        return {
-          Begin: [
-            startDate.getFullYear(),
-            startDate.getMonth() + 1, // Months are 0-indexed in JavaScript
-            startDate.getDate(),
-            startDate.getHours(),
-            startDate.getMinutes(),
-          ],
-          Summary: String(event.title || 'Untitled Event'), // Ensure title is a string
-          Description: String(event.description || ''), // Ensure description is a string
-          Status: validStatus[event.status?.toLowerCase()] || 'TENTATIVE', // Default to TENTATIVE
-        };
-      }).filter(event => event !== null); // Remove null entries
+      const icsEvents = events
+  .map(evt => {
+    const dt = new Date(evt.start);
+    if (isNaN(dt.getTime())) {
+      console.warn('Skipping invalid date:', evt);
+      return null;
+    }
+    // Map Firestore status to valid ICS status
+    const validStatus = {
+        active: 'CONFIRMED',
+        cancelled: 'CANCELLED',
+        tentative: 'TENTATIVE',
+      };
+
+    return {
+      start: [
+        dt.getFullYear(),
+        dt.getMonth() + 1,
+        dt.getDate(),
+        dt.getHours(),
+        dt.getMinutes()
+      ],
+      title:       String(evt.title    || 'Untitled Event'),
+      description: String(evt.description || ''),
+      status:      validStatus[evt.status?.toLowerCase()] || 'TENTATIVE'
+    };
+  })
+  .filter(e => e !== null);
   
       console.log('ICS events:', icsEvents); // Debugging log
   
       // Generate the ICS file
-      const {value } = createEvents(icsEvents);
-  
-      console.log('Generated ICS file content:', value); // Debugging log
-  
+      const { error: icsError, value } = createEvents(icsEvents);
+      console.log({ icsError, value });
+        if (icsError) {
+        console.error('ICS library failed:', icsError);
+        setError(`Error creating ICS: ${icsError.message}`);
+        return;
+        }
       // Save the file
       const blob = new Blob([value], { type: 'text/calendar;charset=utf-8' });
       saveAs(blob, 'calendar-events.ics');
