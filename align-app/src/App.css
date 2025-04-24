@@ -389,22 +389,24 @@ a:hover {
 
 /* Navigation Bar Styles */
 .custom-navbar {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: var(--color-primary);
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
+  font-family: var(--font-primary);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff !important;
+  color: var(--color-light) !important;
   text-decoration: none;
   transition: color 0.3s ease;
   margin-left: 2rem;
 }
 
 .nav-link {
-  color: #ffffff !important;
+  font-family: var(--font-primary);
+  color: var(--color-light) !important;
   font-weight: 500;
   padding: 0.5rem 1rem !important;
   margin: 0 0.25rem;
@@ -417,18 +419,18 @@ a:hover {
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff !important;
+  background-color: var(--color-primary-dark);
+  color: var(--color-light) !important;
 }
 
 .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff !important;
+  background-color: var(--color-primary-dark);
+  color: var(--color-light) !important;
 }
 
 .logout-button {
-  border: 2px solid #ffffff;
-  color: #ffffff;
+  border: 2px solid var(--color-light);
+  color: var(--color-light);
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -436,13 +438,13 @@ a:hover {
 }
 
 .logout-button:hover {
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: var(--color-primary-dark);
+  color: var(--color-light);
 }
 
 @media (max-width: 991.98px) {
   .navbar-collapse {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
     padding: 1rem;
     border-radius: 0.5rem;
     margin-top: 1rem;
