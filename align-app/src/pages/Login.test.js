@@ -1,34 +1,25 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Login from 'Login';
-import { BrowserRouter } from 'react-router-dom';
+import Login from '../pages/Login';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-
-// --- MOCKS ---
-
-// Mock Firebase auth functions
+// Mock Firebase auth module
 jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(),
   signInWithEmailAndPassword: jest.fn(),
 }));
 
-// Create a mock for useNavigate from react-router-dom
+// Mock navigate function first, before mocking the module
 const mockNavigate = jest.fn();
+
+// Mock the module after declaring mockNavigate
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
 }));
 
-// Helper to wrap component in BrowserRouter
-const renderLogin = () =>
-  render(
-    <BrowserRouter>
-      <Login />
-    </BrowserRouter>
-  );
+// Helper function to render the Login component
+const renderLogin = () => {
+  return render(<Login />);
+};
 
-// --- TESTS ---
 describe('Login Component', () => {
   beforeEach(() => {
     // Clear mocks before each test
@@ -64,6 +55,9 @@ describe('Login Component', () => {
   });
 
   test('successful login navigates to /dashboard', async () => {
+    // Import specifically for this test
+    const { signInWithEmailAndPassword } = require('firebase/auth');
+    
     // Simulate a successful Firebase login.
     signInWithEmailAndPassword.mockResolvedValueOnce({ user: { uid: '123' } });
 
@@ -97,6 +91,9 @@ describe('Login Component', () => {
   });
 
   test('displays specific error for invalid email format', async () => {
+    // Import specifically for this test
+    const { signInWithEmailAndPassword } = require('firebase/auth');
+    
     // Simulate a Firebase error for invalid email.
     signInWithEmailAndPassword.mockRejectedValueOnce({ code: 'auth/invalid-email' });
 
@@ -119,6 +116,9 @@ describe('Login Component', () => {
   });
 
   test('displays specific error for wrong credentials', async () => {
+    // Import specifically for this test
+    const { signInWithEmailAndPassword } = require('firebase/auth');
+    
     // Simulate a Firebase error for wrong password/user not found.
     signInWithEmailAndPassword.mockRejectedValueOnce({ code: 'auth/wrong-password' });
 
@@ -141,6 +141,9 @@ describe('Login Component', () => {
   });
 
   test('displays default error for unhandled error code', async () => {
+    // Import specifically for this test
+    const { signInWithEmailAndPassword } = require('firebase/auth');
+    
     // Simulate an unrecognized Firebase error code.
     signInWithEmailAndPassword.mockRejectedValueOnce({ code: 'auth/some-unknown-error' });
 
