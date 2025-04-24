@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faTasks, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faTasks, faUsers } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -55,7 +55,7 @@ const Navigation = () => {
                   Dashboard
                 </Nav.Link>
                 <Nav.Link as={Link} to="/upload" active={location.pathname === '/upload'}>
-                  <FontAwesomeIcon icon={faArrowUpFromBracket} className="me-2" />
+                  <FontAwesomeIcon icon={faUsers} className="me-2" />
                   Upload
                 </Nav.Link>
                 <Nav.Link as={Link} to="/calendar" active={location.pathname === '/calendar'}>
