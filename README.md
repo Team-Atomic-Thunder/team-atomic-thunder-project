@@ -17,7 +17,7 @@ Backup Times: Wed @1815-1900
 
 ### Installation and Build Process
 1. Clone Atomic Thunder GitHub repository
-2. Navigate to `team-atomic-thunder-project\align-app` <br />
+2. Navigate to `team-atomic-thunder-project` <br />
 Run
 ```bash
 npm run setup

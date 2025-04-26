@@ -21,6 +21,12 @@
   --color-dark: #343a40;
   --color-gray: #6c757d;
   --color-text: #333333;
+
+  /*Light/Dark Theme*/
+  color-scheme: light dark;
+  --color-dark-primary: #283037;
+  --color-dark-text: #dcafaf;
+  --color-primary-darker: #522b2d;
 }
 
 /* Base Typography */
@@ -28,8 +34,8 @@ body {
   font-family: var(--font-primary);
   font-weight: 400;
   line-height: 1.6;
-  color: var(--color-text);
-  background-color: var(--color-light);
+  color: light dark(var(--color-text), var(--color-dark-text));
+  background-color: light dark(var(--color-light),var(--color-dark-primary));
 }
 
 /* Headings */
@@ -68,18 +74,18 @@ code, pre, .code-text {
 header, .navbar, nav {
   font-family: var(--font-ui);
   font-weight: 500;
-  background-color: var(--color-primary) !important;
+  background-color: light dark(var(--color-primary), var(--color-primary-dark)) !important;
   color: white !important;
 }
 
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.9) !important;
-  background-color: var(--color-primary) !important;
+  background-color: light dark(var(--color-primary)), (var(--color-primary-dark)) !important;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
   color: white !important;
-  background-color: var(--color-primary) !important;
+  background-color: light dark(var(--color-primary)), (var(--color-primary-dark)) !important;
 }
 
 header .h4 {
@@ -89,11 +95,13 @@ header .h4 {
   color: white !important;
 }
 
+
+
 /* Footer */
 footer {
   font-family: var(--font-ui);
   font-weight: 300;
-  background-color: var(--color-primary-dark) !important;
+  background-color: light dark(var(--color-primary-dark)), (var(--color-primary-darker)) !important;
   color: white !important;
 }
 
@@ -132,8 +140,8 @@ footer .text-muted {
 
 /* Custom Button Styling */
 .btn-primary {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: light dark(var(--color-primary)), (var(--color-primary-dark));
+  border-color: light dark(var(--color-primary)), (var(--color-primary-dark));
   font-family: var(--font-ui);
   font-weight: 500;
 }
