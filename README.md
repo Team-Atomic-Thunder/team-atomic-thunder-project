@@ -20,7 +20,7 @@ Backup Times: Wed @1815-1900
 2. Navigate to `team-atomic-thunder-project\align-app` <br />
 Run
 ```bash
-npm run setup
+npm install
 ```
 3. Navigate to `team-atomic-thunder-project\align-app\src` <br />
 Run 
