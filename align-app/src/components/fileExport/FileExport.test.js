@@ -1,5 +1,5 @@
 import { handleExportToICS } from './FileExport';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { createEvents } from 'ics';
 import { saveAs } from 'file-saver';
