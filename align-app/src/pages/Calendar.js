@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, ListGroup, Badge, Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { getFirestore, collection, query, where, onSnapshot, deleteDoc, getDocs, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase-config';
-import EventForm from '../components/EventForm'; // Import the EventForm component
+import EventForm from '../components/calendar/EventForm'; // Import the EventForm component
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -22,38 +22,39 @@ function CalendarPage() {
   const db = getFirestore(app);
 
   // Load events from Firestore
-  const loadEvents = () => {
-    if (!auth.currentUser) return;
-
-    // Create a query for the user's events
-    const eventsQuery = query(
-      collection(db, 'calendarEvents'),
-      where('userId', '==', auth.currentUser.uid)
-    );
-
-    // Set up a real-time listener for events
-    const unsubscribe = onSnapshot(eventsQuery, (snapshot) => {
-      const eventsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
-      setEvents(eventsData);
-      setLoading(false);
-    });
-
-    // Return the unsubscribe function
-    return unsubscribe;
-  };
-
-  useEffect(() => {
-    const unsubscribe = loadEvents();
-    
-    // Clean up the listener when component unmounts
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [auth.currentUser, db]);
+    // Load events from Firestore using useCallback
+    const loadEvents = useCallback(() => {
+      if (!auth.currentUser) return;
+  
+      // Create a query for the user's events
+      const eventsQuery = query(
+        collection(db, 'calendarEvents'),
+        where('userId', '==', auth.currentUser.uid)
+      );
+  
+      // Set up a real-time listener for events
+      const unsubscribe = onSnapshot(eventsQuery, (snapshot) => {
+        const eventsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+  
+        setEvents(eventsData);
+        setLoading(false);
+      });
+  
+      // Return the unsubscribe function
+      return unsubscribe;
+    }, [auth.currentUser, db]);
+  
+    useEffect(() => {
+      const unsubscribe = loadEvents();
+      
+      // Clean up the listener when component unmounts
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }, [loadEvents]);
 
   // Helper function to get event color based on type
   const getEventColor = (type) => {

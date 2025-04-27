@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { app } from '../firebase-config';
+import { app } from '../../firebase-config';
 
 function EventForm({ show, handleClose, refreshEvents, selectedDate }) {
   const db = getFirestore(app);
