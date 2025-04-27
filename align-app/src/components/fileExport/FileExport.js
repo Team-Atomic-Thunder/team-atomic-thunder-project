@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { createEvents } from 'ics';
 import { getAuth } from 'firebase/auth';
@@ -56,6 +55,7 @@ export const handleExportToICS = async (setError, setSuccess) => {
       console.log('ICS events:', icsEvents); // Debugging log
   
       // Generate the ICS file
+      console.log('ICS events before creating:', icsEvents);
       const { error: icsError, value } = createEvents(icsEvents);
       console.log({ icsError, value });
         if (icsError) {

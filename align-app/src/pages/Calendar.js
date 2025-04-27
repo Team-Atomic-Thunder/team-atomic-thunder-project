@@ -17,8 +17,10 @@ function CalendarPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [success,setSuccess] = useState('');
 
   useEffect(() => {
     if (!auth.currentUser) return;
