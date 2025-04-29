@@ -1,13 +1,14 @@
 import axios from 'axios';
 
 // OpenAI API configuration
-const OPENAI_API_KEY = 'sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace with your API key
+const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 export const parseSyllabusWithAI = async (text) => {
   try {
     console.log('Sending text to AI for parsing. Text length:', text.length);
     console.log('First 500 characters of text:', text.substring(0, 500));
+    console.log('API Key available:', !!OPENAI_API_KEY); // Log if API key is set (without revealing the key)
 
     const response = await axios.post(
       OPENAI_API_URL,
