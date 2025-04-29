@@ -253,8 +253,9 @@ function CalendarPage() {
                 Configure Notifications
               </ListGroup.Item>
               <ListGroup.Item>
-                <Button 
-                  variant="info" 
+              <Button 
+                  variant="danger"
+                  className="w-100"
                   onClick={() => handleExportToICS(setError, setSuccess)}
                 >
                 Export to .ICS
