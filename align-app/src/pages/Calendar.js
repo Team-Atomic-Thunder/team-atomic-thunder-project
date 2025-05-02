@@ -241,9 +241,193 @@ function CalendarPage() {
   }
 
   return (
-    <div>
-      <h1>Calendar</h1>
-    </div>
+    <Container>
+      <style>{calendarStyles}</style>
+      <h1 className="mb-4">Calendar</h1>
+
+      <Row>
+        <Col lg={8}>
+          <Card className="mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Calendar</h5>
+              <Button 
+                variant="primary" 
+                size="sm"
+                onClick={() => setShowAddModal(true)}
+              >
+                Add Event
+              </Button>
+            </Card.Header>
+            <Card.Body>
+              <FullCalendar
+                plugins={[dayGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                events={calendarEvents}
+                eventContent={renderEventContent}
+                headerToolbar={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,dayGridWeek',
+                }}
+                eventClick={handleEventClick}
+                dateClick={handleDateClick}
+                height="auto"
+                eventDisplay="block"
+                eventTimeFormat={{
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  meridiem: 'short'
+                }}
+                dayMaxEvents={true}
+                moreLinkText="more"
+                eventMinHeight={50}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={4}>
+          <Card className="mb-4">
+            <Card.Header>
+              <h5 className="mb-0">Quick Actions</h5>
+            </Card.Header>
+            <ListGroup variant="flush">
+              <ListGroup.Item action as={Link} to="/upload">
+                Upload New Syllabus
+              </ListGroup.Item>
+              <ListGroup.Item action onClick={() => setShowAddModal(true)}>
+                Add Event Manually
+              </ListGroup.Item>
+              <ListGroup.Item action>
+                Configure Notifications
+              </ListGroup.Item>
+              <ListGroup.Item>
+              <Button 
+                  variant="danger"
+                  className="w-100"
+                  onClick={() => handleExportToICS(setError, setSuccess)}
+                >
+                Export to .ICS
+              </Button>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button 
+                  variant="danger" 
+                  className="w-100"
+                  onClick={() => setShowDeleteModal(true)}
+                >
+                  Delete All Events
+                </Button>
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+
+          <Card>
+            <Card.Header>
+              <h5 className="mb-0">Upcoming Events</h5>
+            </Card.Header>
+            <ListGroup variant="flush">
+              {events
+                .filter(event => new Date(event.start) > new Date())
+                .sort((a, b) => new Date(a.start) - new Date(b.start))
+                .slice(0, 5)
+                .map(event => (
+                  <ListGroup.Item key={event.id} action onClick={() => {
+                    setSelectedEvent({
+                      id: event.id,
+                      title: event.title,
+                      type: event.type,
+                      date: new Date(event.start).toLocaleDateString(),
+                      description: event.description || 'No description available',
+                      isManual: event.isManual
+                    });
+                    setShowEventModal(true);
+                  }}>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>{event.title}</strong>
+                        <div className="text-muted small">
+                          {new Date(event.start).toLocaleDateString()}
+                          {event.description && (
+                            <div>{event.description}</div>
+                          )}
+                        </div>
+                      </div>
+                      <Badge bg={getEventColor(event.type)}>
+                        {event.type}
+                      </Badge>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              {events.filter(event => new Date(event.start) > new Date()).length === 0 && (
+                <ListGroup.Item className="text-center text-muted">
+                  No upcoming events
+                </ListGroup.Item>
+              )}
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Event Detail Modal */}
+      <Modal show={showEventModal} onHide={() => setShowEventModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Event Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedEvent && (
+            <div>
+              <h4>{selectedEvent.title}</h4>
+              <p><strong>Type:</strong> {selectedEvent.type.charAt(0).toUpperCase() + selectedEvent.type.slice(1)}</p>
+              <p><strong>Date:</strong> {selectedEvent.date}</p>
+              <p><strong>Description:</strong> {selectedEvent.description}</p>
+              {selectedEvent.isManual && (
+                <Badge bg="info" className="mb-3">Manually Added</Badge>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEventModal(false)}>
+            Close
+          </Button>
+          {selectedEvent && selectedEvent.isManual && (
+            <Button 
+              variant="danger" 
+              onClick={() => handleDeleteEvent(selectedEvent.id)}
+            >
+              Delete Event
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Add Event Modal */}
+      <EventForm 
+        show={showAddModal}
+        handleClose={() => setShowAddModal(false)}
+        refreshEvents={loadEvents}
+        selectedDate={selectedDate}
+      />
+
+      {/* Delete All Events Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete All Events</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete all events? This action cannot be undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteAllEvents}>
+            Delete All Events
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 }
 
