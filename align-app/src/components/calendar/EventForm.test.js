@@ -1,99 +1,51 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen,} from '@testing-library/react';
 import '@testing-library/jest-dom';
+import EventForm from './EventForm';
 
-// Mock Firebase
-jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(() => ({})),
-  collection: jest.fn(() => ({})),
-  addDoc: jest.fn(() => Promise.resolve({ id: 'test-event-id' })),
-  serverTimestamp: jest.fn(() => 'mocked-timestamp')
-}));
+describe('EventForm Integration Tests', () => {
+  const defaultProps = {
+    show: true,
+    handleClose: jest.fn(),
+    refreshEvents: jest.fn(),
+    selectedDate: '2025-01-15'
+  };
 
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({
-    currentUser: { uid: 'test-user-id' }
-  }))
-}));
-
-jest.mock('../../firebase-config', () => ({
-  app: {}
-}));
-
-// Create a simple mock event form component for testing
-const MockEventForm = ({ show, handleClose, selectedDate = '2023-04-15' }) => {
-  return show ? (
-    <div data-testid="event-form-modal">
-      <h2>Add New Event</h2>
-      <input 
-        data-testid="event-title-input" 
-        placeholder="Enter event title" 
-      />
-      <select data-testid="event-type-select">
-        <option value="assignment">Assignment</option>
-        <option value="quiz">Quiz</option>
-      </select>
-      <input 
-        data-testid="event-date-input" 
-        type="date" 
-        defaultValue={selectedDate} 
-      />
-      <button 
-        data-testid="add-event-submit" 
-        onClick={handleClose}
-      >
-        Add Event
-      </button>
-      <button 
-        data-testid="cancel-button" 
-        onClick={handleClose}
-      >
-        Cancel
-      </button>
-    </div>
-  ) : null;
-};
-
-describe('Event Form Tests', () => {
-  test('form displays correctly when show is true', () => {
-    render(<MockEventForm show={true} handleClose={() => {}} />);
-    
-    expect(screen.getByTestId('event-form-modal')).toBeInTheDocument();
-    expect(screen.getByTestId('event-title-input')).toBeInTheDocument();
-    expect(screen.getByTestId('event-type-select')).toBeInTheDocument();
-    expect(screen.getByTestId('event-date-input')).toBeInTheDocument();
-    expect(screen.getByTestId('add-event-submit')).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('form is not displayed when show is false', () => {
-    render(<MockEventForm show={false} handleClose={() => {}} />);
+  test('renders the modal with all form fields when show is true', () => {
+    render(<EventForm {...defaultProps} />);
     
-    expect(screen.queryByTestId('event-form-modal')).not.toBeInTheDocument();
+    expect(screen.getByText('Add New Event')).toBeInTheDocument();
+    expect(screen.getByLabelText('Event Title')).toBeInTheDocument();
+    expect(screen.getByLabelText('Event Type')).toBeInTheDocument();
+    expect(screen.getByLabelText('Date')).toHaveValue('2025-01-15');
+    expect(screen.getByLabelText('Time (optional)')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description (optional)')).toBeInTheDocument();
   });
 
-  test('close button calls handleClose function', () => {
-    const mockHandleClose = jest.fn();
-    render(<MockEventForm show={true} handleClose={mockHandleClose} />);
+  test('shows error when submitting without title', async () => {
+    render(<EventForm {...defaultProps} />);
     
-    fireEvent.click(screen.getByTestId('cancel-button'));
+
     
-    expect(mockHandleClose).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Event title is required')).toBeInTheDocument();
   });
 
-  test('add button calls handleClose function', () => {
-    const mockHandleClose = jest.fn();
-    render(<MockEventForm show={true} handleClose={mockHandleClose} />);
+  test('form fields update correctly when user types', async () => {
+    render(<EventForm {...defaultProps} />);
+ 
     
-    fireEvent.click(screen.getByTestId('add-event-submit'));
-    
-    expect(mockHandleClose).toHaveBeenCalledTimes(1);
+    expect(screen.getByLabelText('Event Title').value).toBe('Final Exam');
+    expect(screen.getByLabelText('Event Type').value).toBe('exam');
+    expect(screen.getByLabelText('Description (optional)').value).toBe('Covers all chapters');
   });
 
-  test('form displays the provided selected date', () => {
-    const testDate = '2023-05-20';
-    render(<MockEventForm show={true} handleClose={() => {}} selectedDate={testDate} />);
+  test('calls handleClose when cancel button is clicked', async () => {
+
     
-    const dateInput = screen.getByTestId('event-date-input');
-    expect(dateInput.value).toBe(testDate);
+    expect(defaultProps.handleClose).toHaveBeenCalledTimes(1);
   });
 });
