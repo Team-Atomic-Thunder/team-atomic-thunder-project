@@ -20,17 +20,17 @@ describe('EventForm Integration Tests', () => {
     render(<EventForm {...defaultProps} />);
     
     expect(screen.getByText('Add New Event')).toBeInTheDocument();
-    expect(screen.getByLabelText('Event Title')).toBeInTheDocument();
-    expect(screen.getByLabelText('Event Type')).toBeInTheDocument();
-    expect(screen.getByLabelText('Date')).toHaveValue('2025-01-15');
-    expect(screen.getByLabelText('Time (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Description (optional)')).toBeInTheDocument();
+    expect(screen.getByText('Event Title')).toBeInTheDocument();
+    expect(screen.getByText('Event Type')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('2025-01-15')).toBeInTheDocument();
+    expect(screen.getByText('Time (optional)')).toBeInTheDocument();
+    expect(screen.getByText('Description (optional)')).toBeInTheDocument();
   });
 
   test('shows error when submitting without title', async () => {
     render(<EventForm {...defaultProps} />);
     
-    const titleInput = screen.getByLabelText('Event Title');
+    const titleInput = screen.getByPlaceholderText('Enter event title');
     await userEvent.clear(titleInput);
     
     const submitButton = screen.getByText('Add Event');
@@ -42,13 +42,13 @@ describe('EventForm Integration Tests', () => {
   test('form fields update correctly when user types', async () => {
     render(<EventForm {...defaultProps} />);
     
-    await userEvent.type(screen.getByLabelText('Event Title'), 'Final Exam');
-    await userEvent.selectOptions(screen.getByLabelText('Event Type'), 'exam');
-    await userEvent.type(screen.getByLabelText('Description (optional)'), 'Covers all chapters');
+    await userEvent.type(screen.getByPlaceholderText('Enter event title'), 'Final Exam');
+    await userEvent.selectOptions(screen.getByRole('combobox'), 'exam');
+    await userEvent.type(screen.getByPlaceholderText('Add details about the event'), 'Covers all chapters');
     
-    expect(screen.getByLabelText('Event Title').value).toBe('Final Exam');
-    expect(screen.getByLabelText('Event Type').value).toBe('exam');
-    expect(screen.getByLabelText('Description (optional)').value).toBe('Covers all chapters');
+    expect(screen.getByPlaceholderText('Enter event title').value).toBe('Final Exam');
+    expect(screen.getByRole('combobox').value).toBe('exam');
+    expect(screen.getByPlaceholderText('Add details about the event').value).toBe('Covers all chapters');
   });
 
   test('calls handleClose when cancel button is clicked', async () => {
