@@ -1,201 +1,76 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { BrowserRouter } from 'react-router-dom';
+import CalendarPage from './Calendar';
 
-const mockEvents = [];
-
-jest.mock('firebase/firestore', () => {
-  return {
-    getFirestore: jest.fn(() => ({})),
-    collection: jest.fn(() => ({})),
-    query: jest.fn(() => ({})),
-    where: jest.fn(() => ({})),
-    onSnapshot: jest.fn((query, callback) => {
-      callback({
-        docs: mockEvents.map(event => ({
-          id: event.id,
-          data: () => event
-        }))
-      });
-      return jest.fn();
-    }),
-    addDoc: jest.fn((collection, data) => {
-      const newEvent = {
-        id: 'new-event-id',
-        ...data
-      };
-      mockEvents.push(newEvent);
-      return Promise.resolve({ id: newEvent.id });
-    }),
-    serverTimestamp: jest.fn(() => 'mocked-timestamp')
+describe('CalendarPage Integration Tests', () => {
+  const renderCalendarPage = () => {
+    return render(
+      <BrowserRouter>
+        <CalendarPage />
+      </BrowserRouter>
+    );
   };
-});
 
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({
-    currentUser: { uid: 'test-user-id' }
-  }))
-}));
-
-jest.mock('../firebase-config', () => ({
-  app: {}
-}));
-
-const MockCalendar = () => {
-  const [events, setEvents] = React.useState([]);
-  const [showAddModal, setShowAddModal] = React.useState(false);
-  
-  React.useEffect(() => {
-    setEvents([...mockEvents]);
-  }, [mockEvents.length]);
-  
-  const addEvent = async (eventData) => {
-    const { getFirestore, collection, addDoc } = require('firebase/firestore');
+  test('renders loading state initially and then calendar page', async () => {
+    renderCalendarPage();
     
-    await addDoc(null, {
-      title: eventData.title,
-      type: eventData.type,
-      start: eventData.date + 'T00:00:00.000Z',
-      description: eventData.description,
-      userId: 'test-user-id',
-      isManual: true
-    });
-    
-    setEvents([...mockEvents]);
-  };
-  
-  return (
-    <div data-testid="calendar-component">
-      <h2>Calendar</h2>
-      <button 
-        data-testid="add-event-button"
-        onClick={() => setShowAddModal(true)}
-      >
-        Add Event
-      </button>
-      
-      <div data-testid="events-list">
-        {events.map(event => (
-          <div 
-            key={event.id}
-            data-testid={`event-${event.id}`}
-            className="event-item"
-          >
-            {event.title}
-          </div>
-        ))}
-      </div>
-      
-      {showAddModal && (
-        <div data-testid="event-form">
-          <input 
-            data-testid="event-title-input" 
-            placeholder="Title" 
-            defaultValue="Test Event"
-          />
-          <select 
-            data-testid="event-type-select"
-            defaultValue="assignment"
-          >
-            <option value="assignment">Assignment</option>
-            <option value="quiz">Quiz</option>
-            <option value="exam">Exam</option>
-          </select>
-          <input 
-            data-testid="event-date-input"
-            type="date"
-            defaultValue="2023-05-01"
-          />
-          <textarea 
-            data-testid="event-description-input"
-            defaultValue="This is a test event"
-          />
-          <button 
-            data-testid="submit-event-button"
-            onClick={async () => {
-              await addEvent({
-                title: "Test Event",
-                type: "assignment",
-                date: "2023-05-01",
-                description: "This is a test event"
-              });
-              setShowAddModal(false);
-            }}
-          >
-            Add Event
-          </button>
-          <button 
-            data-testid="cancel-button"
-            onClick={() => setShowAddModal(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-describe('Calendar Tests', () => {
-  beforeEach(() => {
-    mockEvents.length = 0;
-    jest.clearAllMocks();
-  });
-  
-  test('events are displayed in the calendar', async () => {
-    render(<MockCalendar />);
-    
-    expect(screen.getByTestId('events-list')).toBeInTheDocument();
-    expect(screen.queryByText('Test Event')).not.toBeInTheDocument();
-    
-    const addButton = screen.getByTestId('add-event-button');
-    fireEvent.click(addButton);
-    
-    expect(screen.getByTestId('event-form')).toBeInTheDocument();
-    
-    const submitButton = screen.getByTestId('submit-event-button');
-    
-    await act(async () => {
-      fireEvent.click(submitButton);
-      // Manually wait a bit if needed
-      await new Promise(resolve => setTimeout(resolve, 0));
-    });
-    
-    expect(mockEvents.length).toBe(1);
-    expect(mockEvents[0].title).toBe('Test Event');
+    expect(screen.getByText('Loading calendar events...')).toBeInTheDocument();
     
     await waitFor(() => {
-      expect(screen.getByText('Test Event')).toBeInTheDocument();
+      expect(screen.queryByText('Loading calendar events...')).not.toBeInTheDocument();
     });
+    
+    expect(screen.getByText('Calendar')).toBeInTheDocument();
+    expect(screen.getByText('Quick Actions')).toBeInTheDocument();
+    expect(screen.getByText('Upcoming Events')).toBeInTheDocument();
   });
-  
-  test('add event form opens when button is clicked', () => {
-    render(<MockCalendar />);
-    
-    expect(screen.queryByTestId('event-form')).not.toBeInTheDocument();
-    
-    const addButton = screen.getByTestId('add-event-button');
-    fireEvent.click(addButton);
-    
-    expect(screen.getByTestId('event-form')).toBeInTheDocument();
-  });
-  
-  test('form is closed when event is added', async () => {
-    render(<MockCalendar />);
-    
-    const addButton = screen.getByTestId('add-event-button');
-    fireEvent.click(addButton);
-    
-    expect(screen.getByTestId('event-form')).toBeInTheDocument();
-    
-    const submitButton = screen.getByTestId('submit-event-button');
-    
-    await act(async () => {
-      fireEvent.click(submitButton);
-    });
+
+  test('opens add event modal when clicking add event button', async () => {
+    renderCalendarPage();
     
     await waitFor(() => {
-      expect(screen.queryByTestId('event-form')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading calendar events...')).not.toBeInTheDocument();
     });
+    
+    const addEventButton = screen.getByRole('button', { name: /add event/i });
+    await userEvent.click(addEventButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Add New Event')).toBeInTheDocument();
+    });
+  });
+
+  test('opens delete confirmation modal when clicking delete all events', async () => {
+    renderCalendarPage();
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Loading calendar events...')).not.toBeInTheDocument();
+    });
+    
+    const deleteAllButton = screen.getByRole('button', { name: /delete all events/i });
+    await userEvent.click(deleteAllButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Are you sure you want to delete all events? This action cannot be undone.')).toBeInTheDocument();
+    });
+  });
+
+  test('renders quick actions with proper navigation links', async () => {
+    renderCalendarPage();
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Loading calendar events...')).not.toBeInTheDocument();
+    });
+    
+    expect(screen.getByText('Upload New Syllabus')).toBeInTheDocument();
+    expect(screen.getByText('Add Event Manually')).toBeInTheDocument();
+    expect(screen.getByText('Configure Notifications')).toBeInTheDocument();
+    expect(screen.getByText('Export Calendar')).toBeInTheDocument();
+    
+    const uploadLink = screen.getByRole('link', { name: /upload new syllabus/i });
+    expect(uploadLink).toHaveAttribute('href', '/upload');
   });
 });
