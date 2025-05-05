@@ -6,6 +6,8 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../firebase-config';
 import EventForm from '../components/calendar/EventForm'; // Import the EventForm component
 
+import { handleExportToICS } from '../components/fileExport/FileExport';
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -20,6 +22,10 @@ function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [success,setSuccess] = useState('');
 
   // Load events from Firestore
     // Load events from Firestore using useCallback
@@ -295,8 +301,14 @@ function CalendarPage() {
               <ListGroup.Item action>
                 Configure Notifications
               </ListGroup.Item>
-              <ListGroup.Item action>
-                Export Calendar
+              <ListGroup.Item>
+              <Button 
+                  variant="danger"
+                  className="w-100"
+                  onClick={() => handleExportToICS(setError, setSuccess)}
+                >
+                Export to .ICS
+              </Button>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button 
