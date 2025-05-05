@@ -151,7 +151,7 @@ function EventForm({ show, handleClose, refreshEvents, selectedDate }) {
                 <Form.Control
                   type="date"
                   name="date"
-                  value={formData.date}
+                  value={0}
                   onChange={handleChange}
                   required
                 />
