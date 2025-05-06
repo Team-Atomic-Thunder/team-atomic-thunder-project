@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, ListGroup, Badge, ProgressBar, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { handleExportToICS } from '../components/fileExport/FileExport';
 
 function DashboardPage() {
+  // eslint-disable-next-line no-unused-vars
+    const [error, setError] = useState('');
+    // eslint-disable-next-line no-unused-vars
+    const [success,setSuccess] = useState('');
   // Mock data for development
   const [courses] = useState([
     { id: 1, code: 'CS101', name: 'Introduction to Computer Science', instructor: 'Dr. Smith', progress: 65 },
@@ -149,8 +154,14 @@ function DashboardPage() {
               <ListGroup.Item action>
                 Configure Notifications
               </ListGroup.Item>
-              <ListGroup.Item action>
-                Export Calendar
+              <ListGroup.Item>
+                <Button 
+                  variant="danger"
+                  className="w-100"
+                  onClick={() => handleExportToICS(setError, setSuccess)}
+                  >
+                  Export to .ICS
+                </Button>
               </ListGroup.Item>
             </ListGroup>
           </Card>

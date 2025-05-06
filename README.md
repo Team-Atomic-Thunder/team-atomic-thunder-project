@@ -20,14 +20,19 @@ Backup Times: Wed @1815-1900
 2. Navigate to `team-atomic-thunder-project` <br />
 Run
 ```bash
-npm run setup
+npm install
 ```
 3. Navigate to `team-atomic-thunder-project\align-app\src` <br />
 Run 
 ```bash
 npm start
 ```
-
+### Running tests
+Navigate to `team-atomic-thunder-project\align-app\src` <br />
+Run 
+```bash
+npm test
+```
 ### App Running on Teams' Machines
 
 [Click for screenshot](https://docs.google.com/document/d/13Kg4ABdhLJTuJ48swX5GOtbcQP9ssZEZYW-9z344OJ8/edit?usp=sharing
