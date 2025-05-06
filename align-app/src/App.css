@@ -23,19 +23,34 @@
   --color-text: #333333;
 
   /*Light/Dark Theme*/
-  color-scheme: light dark;
   --color-dark-primary: #283037;
   --color-dark-text: #dcafaf;
   --color-primary-darker: #522b2d;
 }
+
+/*Dark Theme*/
+[data-theme="dark"]{
+  /* Color Variables */
+  --color-primary: #283037;
+  --color-primary-light: #b57377;
+  --color-primary-dark: #522b2d;
+  --color-secondary: #E16A54;
+  --color-secondary-light: #e68a78;
+  --color-secondary-dark: #c7503a;
+  --color-light: #f8f9fa;
+  --color-dark: #343a40;
+  --color-gray: #6c757d;
+  --color-text: #dcafaf;  
+}
+
 
 /* Base Typography */
 body {
   font-family: var(--font-primary);
   font-weight: 400;
   line-height: 1.6;
-  color: light dark(var(--color-text), var(--color-dark-text));
-  background-color: light dark(var(--color-light),var(--color-dark-primary));
+  color: var(--color-text);
+  background-color: var(--color-light);
 }
 
 /* Headings */
@@ -74,18 +89,18 @@ code, pre, .code-text {
 header, .navbar, nav {
   font-family: var(--font-ui);
   font-weight: 500;
-  background-color: light dark(var(--color-primary), var(--color-primary-dark)) !important;
+  background-color: var(--color-primary) !important;
   color: white !important;
 }
 
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.9) !important;
-  background-color: light dark(var(--color-primary)), (var(--color-primary-dark)) !important;
+  background-color: var(--color-primary) !important;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
   color: white !important;
-  background-color: light dark(var(--color-primary)), (var(--color-primary-dark)) !important;
+  background-color: var(--color-primary) !important;
 }
 
 header .h4 {
@@ -101,7 +116,7 @@ header .h4 {
 footer {
   font-family: var(--font-ui);
   font-weight: 300;
-  background-color: light dark(var(--color-primary-dark)), (var(--color-primary-darker)) !important;
+  background-color: var(--color-primary-dark) !important;
   color: white !important;
 }
 
@@ -140,8 +155,8 @@ footer .text-muted {
 
 /* Custom Button Styling */
 .btn-primary {
-  background-color: light dark(var(--color-primary)), (var(--color-primary-dark));
-  border-color: light dark(var(--color-primary)), (var(--color-primary-dark));
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   font-family: var(--font-ui);
   font-weight: 500;
 }
@@ -466,4 +481,66 @@ a:hover {
     margin-top: 1rem;
     width: 100%;
   }
+}
+
+/*Dark mode toggle switch*/
+
+.toggle-theme-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.toggle-theme-wrapper span {
+  font-size: 28px;
+}
+
+.toggle-theme {
+  position: relative;
+  display: inline-block;
+  height: 34px;
+  width: 60px;
+}
+
+.toggle-theme input {
+  display: none;
+}
+
+.slider {
+  background-color: #ccc;
+  position: absolute;
+  cursor: pointer;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition: 0.2s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:checked + .slider {
+  background-color: cornflowerblue;
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
