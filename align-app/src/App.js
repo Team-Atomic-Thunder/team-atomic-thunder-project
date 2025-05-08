@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from './firebase-config';
-import { Navbar, Container, Nav, Button, FormLabel } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 
 // Components
 import HomePage from './HomePage';
