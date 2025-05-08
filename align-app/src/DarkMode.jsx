@@ -22,6 +22,7 @@ const prefersDark =
 if (defaultDark) {
     setDark();
 }
+
   
 const toggleTheme = (e) => {
     if (e.target.checked) {
@@ -34,7 +35,6 @@ const toggleTheme = (e) => {
 const DarkMode = () => {
     return (
       <div className="toggle-theme-wrapper">
-        <span>☀️</span>
         <label className="toggle-theme" htmlFor="checkbox">
           <input
             type="checkbox"
@@ -46,7 +46,6 @@ const DarkMode = () => {
           />
           <div className="slider round"></div>
         </label>
-        <span>🌒</span>
       </div>
     );
   };

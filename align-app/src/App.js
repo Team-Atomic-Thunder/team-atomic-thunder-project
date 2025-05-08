@@ -45,7 +45,9 @@ const Navigation = () => {
         <Navbar.Brand as={Link} to="/" className="navbar-brand">
           <span className="brand-text">ALIGN</span>
         </Navbar.Brand>
+        
         <DarkMode/>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         
         <Navbar.Collapse id="basic-navbar-nav">
