@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import DashboardPage from './pages/Dashboard';
 import SyllabusUpload from './components/syllabus/SyllabusUpload';
 import CalendarPage from './pages/Calendar';
+import DarkMode from './DarkMode';
 
 // Navigation component
 const Navigation = () => {
@@ -36,7 +37,8 @@ const Navigation = () => {
       console.error('Error signing out:', error);
     }
   };
-
+  
+  
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
@@ -44,6 +46,8 @@ const Navigation = () => {
           <span className="brand-text">ALIGN</span>
         </Navbar.Brand>
         
+        <DarkMode/>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         
         <Navbar.Collapse id="basic-navbar-nav">
