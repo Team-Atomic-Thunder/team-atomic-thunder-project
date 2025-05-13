@@ -259,29 +259,7 @@ function CalendarPage() {
               </Button>
             </Card.Header>
             <Card.Body>
-              <FullCalendar
-                plugins={[dayGridPlugin, interactionPlugin]}
-                initialView="dayGridMonth"
-                events={calendarEvents}
-                eventContent={renderEventContent}
-                headerToolbar={{
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'dayGridMonth,dayGridWeek',
-                }}
-                eventClick={handleEventClick}
-                dateClick={handleDateClick}
-                height="auto"
-                eventDisplay="block"
-                eventTimeFormat={{
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  meridiem: 'short'
-                }}
-                dayMaxEvents={true}
-                moreLinkText="more"
-                eventMinHeight={50}
-              />
+              <div>Full Calendar goes here</div>
             </Card.Body>
           </Card>
         </Col>
